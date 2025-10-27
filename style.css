@@ -1,0 +1,625 @@
+/* style.css - Основні стилі сайту iStore (без стилів корзини) */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    background-color: #f5f5f7;
+}
+
+/* Шапка */
+header {
+    background: #000;
+    color: white;
+    padding: 15px 0;
+    border-bottom: 1px solid #333;
+    position: relative;
+    z-index: 1001;
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.logo span {
+    color: #007aff;
+}
+
+.search-bar {
+    position: relative;
+    flex-grow: 1;
+    margin: 0 30px;
+    max-width: 500px;
+}
+
+.search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 12px 20px;
+    border-radius: 20px;
+    border: none;
+    font-size: 16px;
+}
+
+.user-actions a {
+    color: white;
+    text-decoration: none;
+    margin-left: 20px;
+    font-size: 14px;
+}
+
+.user-actions a:hover {
+    color: #007aff;
+}
+
+/* Стилі для пошуку */
+.search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    max-height: 400px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none;
+}
+
+.search-result-item {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: background 0.3s;
+}
+
+.search-result-item:hover {
+    background: #f8f9fa;
+}
+
+.search-result-item img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+}
+
+.search-result-info h4 {
+    margin: 0 0 5px 0;
+    color: #333;
+}
+
+.search-result-info .price {
+    color: #e53935;
+    font-weight: bold;
+}
+
+.search-result-info .model {
+    color: #666;
+    font-size: 12px;
+}
+
+.no-results {
+    padding: 20px;
+    text-align: center;
+    color: #666;
+}
+
+.similar-products {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+/* Плаваючі фільтри */
+.sticky-filters {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    width: 320px;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    z-index: 999;
+    max-height: 80vh;
+    overflow-y: auto;
+    display: none;
+    border: 2px solid #007aff;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: all 0.3s ease;
+}
+
+.sticky-filters.active {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.sticky-filters.visible {
+    display: block;
+    animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.sticky-filters h3 {
+    margin-bottom: 15px;
+    color: #000;
+    font-size: 18px;
+    border-bottom: 2px solid #007aff;
+    padding-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.filter-toggle {
+    position: fixed;
+    top: 120px;
+    right: 20px;
+    background: #007aff;
+    color: white;
+    border: none;
+    padding: 12px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(0,122,255,0.3);
+    transition: all 0.3s;
+}
+
+.filter-toggle:hover {
+    background: #0056cc;
+    transform: translateY(-2px);
+}
+
+.close-filters {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #666;
+}
+
+.sticky-filter-group {
+    margin-bottom: 20px;
+}
+
+.sticky-filter-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #333;
+}
+
+.sticky-price-range {
+    width: 100%;
+    margin: 10px 0;
+}
+
+.sticky-model-filters {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.sticky-model-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sticky-model-checkbox input {
+    width: 18px;
+    height: 18px;
+}
+
+.price-display {
+    font-size: 14px;
+    color: #666;
+    margin-top: 5px;
+}
+
+/* Вкладки категорій */
+.category-tabs {
+    background: #fff;
+    padding: 0 20px;
+    border-bottom: 1px solid #e1e1e1;
+    position: relative;
+    z-index: 998;
+}
+
+.tabs-container {
+    display: flex;
+    list-style: none;
+    gap: 0;
+    justify-content: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.tab {
+    padding: 20px 30px;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.tab:hover {
+    background: #f8f8f8;
+}
+
+.tab.active {
+    border-bottom-color: #007aff;
+    color: #007aff;
+}
+
+/* Головна секція */
+.hero {
+    background: linear-gradient(135deg, #000, #333);
+    color: white;
+    padding: 80px 20px;
+    text-align: center;
+}
+
+.hero h1 {
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+.hero p {
+    font-size: 20px;
+    opacity: 0.9;
+}
+
+/* Інформаційні блоки */
+.benefits {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.benefit-card {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    transition: transform 0.3s;
+    border: 1px solid #e1e1e1;
+}
+
+.benefit-card:hover {
+    transform: translateY(-5px);
+}
+
+.benefit-icon {
+    font-size: 40px;
+    margin-bottom: 15px;
+}
+
+.benefit-card h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #000;
+}
+
+.benefit-card p {
+    color: #666;
+    font-size: 14px;
+}
+
+/* Фільтри */
+.filters {
+    background: #fff;
+    padding: 25px;
+    margin: 30px auto;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    max-width: 1200px;
+}
+
+.filters h3 {
+    margin-bottom: 20px;
+    color: #000;
+    font-size: 20px;
+}
+
+.filter-group {
+    margin-bottom: 20px;
+}
+
+.filter-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #333;
+}
+
+.price-range {
+    width: 100%;
+    margin: 10px 0;
+}
+
+.model-filters {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.model-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.model-checkbox input {
+    width: 18px;
+    height: 18px;
+}
+
+/* Каталог товарів */
+.products {
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.category-title {
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 32px;
+    color: #000;
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+.product-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    border: 1px solid #e1e1e1;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.product-card:active {
+    transform: scale(0.98);
+}
+
+.product-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
+    margin-bottom: 15px;
+    transition: transform 0.3s;
+}
+
+.product-card:hover img {
+    transform: scale(1.05);
+}
+
+.product-card h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #000;
+    min-height: 44px;
+}
+
+.model-badge {
+    display: inline-block;
+    background: #007aff;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    margin-bottom: 10px;
+}
+
+.specs {
+    color: #666;
+    font-size: 14px;
+    margin: 8px 0;
+    min-height: 20px;
+}
+
+.price {
+    color: #e53935;
+    font-weight: bold;
+    font-size: 22px;
+    margin: 15px 0;
+}
+
+.product-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.details-btn {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    flex: 1;
+    transition: background 0.3s;
+}
+
+.details-btn:hover {
+    background: #545b62;
+}
+
+.buy-btn {
+    background: #007aff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    flex: 2;
+    transition: background 0.3s;
+}
+
+.buy-btn:hover {
+    background: #0056cc;
+}
+
+/* Футер */
+footer {
+    background: #000;
+    color: white;
+    padding: 50px 20px;
+    margin-top: 60px;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+/* Стилі для кошика (лічильник) */
+.cart-count {
+    background: #e53935;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 12px;
+    margin-left: 5px;
+}
+
+/* Приховані категорії */
+.category-content {
+    display: none;
+}
+
+.category-content.active {
+    display: block;
+}
+
+/* Адаптивність */
+@media (max-width: 768px) {
+    .header-top {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .search-bar {
+        margin: 10px 0;
+        max-width: 100%;
+    }
+    
+    .tabs-container {
+        flex-wrap: wrap;
+    }
+    
+    .tab {
+        padding: 15px 20px;
+    }
+    
+    .hero h1 {
+        font-size: 36px;
+    }
+    
+    .model-filters {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    }
+
+    .sticky-filters {
+        width: 90%;
+        right: 5%;
+        left: 5%;
+    }
+
+    .filter-toggle {
+        top: 80px;
+        right: 10px;
+    }
+
+    .product-actions {
+        flex-direction: column;
+    }
+
+    .benefits-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Анімації */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.product-card {
+    animation: fadeIn 0.6s ease-out;
+}

@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Підтвердження - iMarket Sell</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../cart.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Всі стилі з попередніх кроків */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f5f7 0%, #e8ecf1 100%);
+            min-height: 100vh;
+        }
+
+        header {
+            background: #000;
+            color: white;
+            padding: 15px 0;
+            border-bottom: 1px solid #333;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .logo span {
+            color: #007aff;
+        }
+
+        .user-actions a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 14px;
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .checkout-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .checkout-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .checkout-header h1 {
+            font-size: 36px;
+            color: #000;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #007aff, #0056cc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .checkout-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 50px;
+            position: relative;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .checkout-steps:before {
+            content: '';
+            position: absolute;
+            top: 25px;
+            left: 10%;
+            right: 10%;
+            height: 3px;
+            background: #e0e0e0;
+            z-index: 1;
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            flex: 1;
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #4CAF50;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-weight: bold;
+            font-size: 18px;
+            border: 3px solid white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .step.completed .step-number {
+            background: #4CAF50;
+        }
+
+        .step.active .step-number {
+            background: #007aff;
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(0, 122, 255, 0.3);
+        }
+
+        .step-label {
+            font-weight: 500;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        .step:not(.active) .step-label {
+            color: #666;
+            font-weight: normal;
+        }
+
+        .checkout-content {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 40px;
+            align-items: start;
+        }
+
+        .checkout-form {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            border: 1px solid #e8ecf1;
+        }
+
+        .form-section {
+            margin-bottom: 40px;
+            animation: slideInUp 0.6s ease-out;
+        }
+
+        .form-section h3 {
+            margin-bottom: 25px;
+            color: #000;
+            font-size: 22px;
+            border-bottom: 3px solid #007aff;
+            padding-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .confirmation-details {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .detail-group {
+            margin-bottom: 20px;
+        }
+
+        .detail-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .detail-group h4 {
+            color: #007aff;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e8ecf1;
+        }
+
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 18px 30px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-right: 15px;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        .btn-secondary:hover {
+            background: #545b62;
+            transform: translateX(-5px);
+        }
+
+        .order-summary {
+            background: white;
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            border: 1px solid #e8ecf1;
+            position: sticky;
+            top: 30px;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 18px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .summary-total {
+            font-size: 24px;
+            font-weight: bold;
+            color: #e53935;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 3px solid #e8ecf1;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .secure-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: #f8fff8;
+            border: 1px solid #4CAF50;
+            color: #4CAF50;
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-weight: 500;
+        }
+
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 968px) {
+            .checkout-content { grid-template-columns: 1fr; }
+            .order-summary { position: static; order: -1; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-top">
+            <div class="logo">iMarket <span>Sell</span></div>
+            <div class="user-actions">
+                <a href="../index.html">
+                    <i class="fas fa-arrow-left"></i>
+                    На головну
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="checkout-container">
+        <div class="checkout-header">
+            <h1>Оформлення замовлення</h1>
+            <p>Крок 3 з 3 - Підтвердіть ваше замовлення</p>
+        </div>
+        
+        <div class="checkout-steps">
+            <div class="step completed">
+                <div class="step-number">1</div>
+                <div class="step-label">Дані доставки</div>
+            </div>
+            <div class="step completed">
+                <div class="step-number">2</div>
+                <div class="step-label">Оплата</div>
+            </div>
+            <div class="step active">
+                <div class="step-number">3</div>
+                <div class="step-label">Підтвердження</div>
+            </div>
+        </div>
+
+        <div class="checkout-content">
+            <div class="checkout-form">
+                <button class="btn-secondary" onclick="goBackToPayment()">
+                    <i class="fas fa-arrow-left"></i>
+                    Повернутись до оплати
+                </button>
+                
+                <!-- Деталі замовлення -->
+                <div class="form-section">
+                    <h3>
+                        <i class="fas fa-check-circle form-section-icon"></i>
+                        Перевірте деталі замовлення
+                    </h3>
+                    
+                    <div class="confirmation-details">
+                        <div class="detail-group">
+                            <h4><i class="fas fa-user"></i> Дані клієнта</h4>
+                            <div class="detail-item">
+                                <span>Ім'я:</span>
+                                <strong id="confirm-name"></strong>
+                            </div>
+                            <div class="detail-item">
+                                <span>Телефон:</span>
+                                <strong id="confirm-phone"></strong>
+                            </div>
+                            <div class="detail-item">
+                                <span>Email:</span>
+                                <strong id="confirm-email"></strong>
+                            </div>
+                        </div>
+
+                        <div class="detail-group">
+                            <h4><i class="fas fa-shipping-fast"></i> Доставка</h4>
+                            <div class="detail-item">
+                                <span>Місто:</span>
+                                <strong id="confirm-city"></strong>
+                            </div>
+                            <div class="detail-item">
+                                <span>Спосіб:</span>
+                                <strong id="confirm-delivery"></strong>
+                            </div>
+                            <div class="detail-item">
+                                <span>Адреса:</span>
+                                <strong id="confirm-address"></strong>
+                            </div>
+                        </div>
+
+                        <div class="detail-group">
+                            <h4><i class="fas fa-credit-card"></i> Оплата</h4>
+                            <div class="detail-item">
+                                <span>Спосіб:</span>
+                                <strong id="confirm-payment"></strong>
+                            </div>
+                            <div id="confirm-card-details" style="display: none;">
+                                <div class="detail-item">
+                                    <span>Картка:</span>
+                                    <strong>**** **** **** <span id="confirm-card-last4"></span></strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="detail-group" id="confirm-comment-group" style="display: none;">
+                            <h4><i class="fas fa-comment"></i> Коментар</h4>
+                            <div class="detail-item">
+                                <span>Повідомлення:</span>
+                                <strong id="confirm-comment"></strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="secure-badge">
+                        <i class="fas fa-shield-alt"></i>
+                        Ваші дані захищені. Ми ніколи не передаємо їх третім особам.
+                    </div>
+                </div>
+
+                <button class="btn-primary" onclick="confirmOrder()">
+                    <i class="fas fa-check"></i>
+                    Підтвердити та оплатити замовлення
+                </button>
+            </div>
+
+            <div class="order-summary">
+                <h3 style="margin-bottom: 25px; color: #000; font-size: 22px; border-bottom: 3px solid #007aff; padding-bottom: 12px; text-align: center; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                    <i class="fas fa-shopping-bag"></i>
+                    Підсумок замовлення
+                </h3>
+                <div id="checkout-items"></div>
+                <div class="summary-total" id="checkout-total">0 ₴</div>
+                
+                <div style="margin-top: 25px; padding: 20px; background: #f8f9fa; border-radius: 10px;">
+                    <h4 style="margin-bottom: 15px; color: #333; display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-gift" style="color: #007aff;"></i>
+                        Ваші бонуси
+                    </h4>
+                    <ul style="color: #666; line-height: 1.6;">
+                        <li style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                            <i class="fas fa-star" style="color: #FFD700; font-size: 12px;"></i>
+                            +150 бонусних балів за це замовлення
+                        </li>
+                        <li style="display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-shield-alt" style="color: #4CAF50; font-size: 12px;"></i>
+                            Гарантія повернення 14 днів
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Завантаження та відображення даних
+        function loadConfirmationData() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const total = localStorage.getItem('cartTotal') || 0;
+            const deliveryData = JSON.parse(localStorage.getItem('deliveryData') || '{}');
+            const paymentData = JSON.parse(localStorage.getItem('paymentData') || '{}');
+            
+            // Оновлюємо товари
+            const itemsContainer = document.getElementById('checkout-items');
+            const totalElement = document.getElementById('checkout-total');
+            
+            itemsContainer.innerHTML = '';
+            cart.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'summary-item';
+                itemElement.innerHTML = `
+                    <div>
+                        <strong>${item.name}</strong>
+                        <div style="color: #666; font-size: 14px; margin-top: 5px;">${item.quantity} × ${item.price.toLocaleString('uk-UA')} ₴</div>
+                    </div>
+                    <div style="font-weight: bold;">${(item.price * item.quantity).toLocaleString('uk-UA')} ₴</div>
+                `;
+                itemsContainer.appendChild(itemElement);
+            });
+            totalElement.textContent = `${parseInt(total).toLocaleString('uk-UA')} ₴`;
+            
+            // Заповнюємо деталі замовлення
+            document.getElementById('confirm-name').textContent = `${deliveryData.firstName} ${deliveryData.lastName}`;
+            document.getElementById('confirm-phone').textContent = deliveryData.phone;
+            document.getElementById('confirm-email').textContent = deliveryData.email;
+            document.getElementById('confirm-city').textContent = getCityName(deliveryData.city);
+            document.getElementById('confirm-delivery').textContent = getDeliveryMethodName(deliveryData.deliveryMethod);
+            document.getElementById('confirm-address').textContent = deliveryData.address;
+            document.getElementById('confirm-payment').textContent = getPaymentMethodName(paymentData.method);
+            
+            // Деталі картки
+            if (paymentData.method === 'card' && paymentData.cardLast4) {
+                document.getElementById('confirm-card-details').style.display = 'block';
+                document.getElementById('confirm-card-last4').textContent = paymentData.cardLast4;
+            }
+            
+            // Коментар
+            if (deliveryData.comment) {
+                document.getElementById('confirm-comment-group').style.display = 'block';
+                document.getElementById('confirm-comment').textContent = deliveryData.comment;
+            }
+        }
+
+        // Допоміжні функції
+        function getCityName(city) {
+            const cities = {
+                'kyiv': 'Київ', 'lviv': 'Львів', 'kharkiv': 'Харків',
+                'odesa': 'Одеса', 'dnipro': 'Дніпро'
+            };
+            return cities[city] || city;
+        }
+
+        function getDeliveryMethodName(method) {
+            const methods = {
+                'nova-poshta': 'Нова Пошта', 'ukr-poshta': 'Укрпошта',
+                'courier': 'Кур\'єр', 'pickup': 'Самовивіз'
+            };
+            return methods[method] || method;
+        }
+
+        function getPaymentMethodName(method) {
+            const methods = {
+                'card': 'Банківська карта',
+                'google-pay': 'Google Pay',
+                'apple-pay': 'Apple Pay',
+                'cash': 'Готівка при отриманні'
+            };
+            return methods[method] || method;
+        }
+
+        // Навігація
+        function goBackToPayment() {
+            window.location.href = 'checkout-step2.html';
+        }
+
+        // Підтвердження замовлення
+        function confirmOrder() {
+            // Блокуємо кнопку
+            const btn = document.querySelector('.btn-primary');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Обробка замовлення...';
+            btn.disabled = true;
+            
+            // Імітація обробки замовлення
+            setTimeout(() => {
+                // Генеруємо номер замовлення
+                const orderId = 'ORD' + Date.now().toString().slice(-8);
+                
+                // Зберігаємо дані замовлення
+                const orderData = {
+                    id: orderId,
+                    timestamp: new Date().toISOString(),
+                    delivery: JSON.parse(localStorage.getItem('deliveryData') || '{}'),
+                    payment: JSON.parse(localStorage.getItem('paymentData') || '{}'),
+                    cart: JSON.parse(localStorage.getItem('cart') || '[]'),
+                    total: localStorage.getItem('cartTotal') || 0,
+                    status: 'confirmed'
+                };
+                
+                // Зберігаємо замовлення
+                localStorage.setItem('currentOrder', JSON.stringify(orderData));
+                
+                // Очищаємо кошик
+                localStorage.removeItem('cart');
+                localStorage.removeItem('cartTotal');
+                localStorage.removeItem('deliveryData');
+                localStorage.removeItem('paymentData');
+                localStorage.removeItem('selectedPayment');
+                
+                // Переходимо на сторінку успіху
+                window.location.href = 'checkout-success.html';
+            }, 2000);
+        }
+
+        // Ініціалізація
+        document.addEventListener('DOMContentLoaded', loadConfirmationData);
+    </script>
+</body>
+</html>

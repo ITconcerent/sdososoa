@@ -1,0 +1,3584 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iMarket Sell - Офіційний магазин Apple</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="cart.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f7;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Стилі для основного контенту */
+        .main-content {
+            flex: 1;
+        }
+
+        /* ========== СИСТЕМА АКАУНТІВ ========== */
+        /* Модальні вікна для авторизації */
+        .auth-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 10000;
+            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .auth-modal.active {
+            display: flex;
+        }
+
+        .auth-content {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            max-width: 400px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .close-auth {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: #666;
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .auth-tab.active {
+            border-bottom-color: #007aff;
+            color: #007aff;
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e1e1;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: #007aff;
+            outline: none;
+        }
+
+        .auth-btn {
+            width: 100%;
+            background: #007aff;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+
+        .auth-btn:hover {
+            background: #0056cc;
+        }
+
+        .auth-switch {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+        }
+
+        .auth-switch a {
+            color: #007aff;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .auth-switch a:hover {
+            text-decoration: underline;
+        }
+
+        /* Профіль користувача */
+        .user-profile {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 10000;
+            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .user-profile.active {
+            display: flex;
+        }
+
+        .profile-content {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .profile-avatar {
+            width: 60px;
+            height: 60px;
+            background: #007aff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .profile-info h3 {
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .profile-info p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .admin-badge {
+            background: #ff6b6b;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .profile-section {
+            margin-bottom: 25px;
+        }
+
+        .profile-section h4 {
+            margin-bottom: 15px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .profile-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .profile-btn.primary {
+            background: #007aff;
+            color: white;
+        }
+
+        .profile-btn.primary:hover {
+            background: #0056cc;
+        }
+
+        .profile-btn.secondary {
+            background: #f8f9fa;
+            color: #333;
+            border: 2px solid #e1e1e1;
+        }
+
+        .profile-btn.secondary:hover {
+            background: #e9ecef;
+        }
+
+        .profile-btn.danger {
+            background: #e53935;
+            color: white;
+        }
+
+        .profile-btn.danger:hover {
+            background: #c62828;
+        }
+
+        /* Адмін панель */
+        .admin-panel {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 10001;
+            backdrop-filter: blur(10px);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .admin-panel.active {
+            display: flex;
+        }
+
+        .admin-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 900px;
+            width: 95%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .admin-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .admin-tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .admin-tab.active {
+            border-bottom-color: #007aff;
+            color: #007aff;
+        }
+
+        .admin-section {
+            display: none;
+        }
+
+        .admin-section.active {
+            display: block;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .admin-table th,
+        .admin-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .admin-table th {
+            background: #f8f9fa;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .admin-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .admin-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+
+        .admin-btn.edit {
+            background: #007aff;
+            color: white;
+        }
+
+        .admin-btn.delete {
+            background: #e53935;
+            color: white;
+        }
+
+        .admin-btn.toggle {
+            background: #ffa000;
+            color: white;
+        }
+
+        /* Інші стилі залишаються незмінними */
+        /* ========== ГАМБУРГЕР-МЕНЮ ========== */
+        .hamburger-menu {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1002;
+            cursor: pointer;
+        }
+
+        .hamburger-btn {
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 0, 0, 0.9);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .hamburger-btn:hover {
+            background: rgba(0, 0, 0, 0.95);
+            transform: scale(1.05);
+        }
+
+        .hamburger-line {
+            width: 20px;
+            height: 2px;
+            background: white;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .hamburger-btn.active .hamburger-line:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+
+        .hamburger-btn.active .hamburger-line:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger-btn.active .hamburger-line:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
+
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 300px;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 1001;
+            transition: left 0.3s ease;
+            padding: 80px 0 30px 0;
+            overflow-y: auto;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .mobile-menu.active {
+            left: 0;
+        }
+
+        .menu-header {
+            padding: 0 25px 20px 25px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .menu-header .logo {
+            font-size: 24px;
+            color: white;
+        }
+
+        .menu-header .logo span {
+            color: #007aff;
+        }
+
+        .menu-items {
+            list-style: none;
+            padding: 0 15px;
+        }
+
+        .menu-item {
+            margin-bottom: 5px;
+        }
+
+        .menu-item a {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 20px;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .menu-item a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .menu-item i {
+            width: 20px;
+            text-align: center;
+            font-size: 18px;
+            color: #007aff;
+        }
+
+        .menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 15px 20px;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 18px;
+        }
+
+        .social-link:hover {
+            background: #007aff;
+            transform: translateY(-2px);
+        }
+
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* ========== СУЧАСНИЙ ФУТЕР ========== */
+        .modern-footer {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: white;
+            padding: 60px 0 30px 0;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+        }
+
+        .footer-column h3 {
+            color: #007aff;
+            font-size: 18px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-column h3 i {
+            font-size: 20px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: #b0b0b0;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+
+        .footer-links a:hover {
+            color: #007aff;
+            transform: translateX(5px);
+        }
+
+        .footer-links a i {
+            width: 16px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .footer-links a:hover i {
+            color: #007aff;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #b0b0b0;
+            font-size: 14px;
+        }
+
+        .contact-item i {
+            width: 20px;
+            text-align: center;
+            color: #007aff;
+            font-size: 16px;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .footer-social-link {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 18px;
+        }
+
+        .footer-social-link:hover {
+            background: #007aff;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 122, 255, 0.4);
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px 0 20px;
+            border-top: 1px solid #333;
+            margin-top: 50px;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .footer-bottom p {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        /* Адаптивність футера */
+        @media (max-width: 1024px) {
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+                text-align: center;
+            }
+
+            .footer-column h3 {
+                justify-content: center;
+            }
+
+            .footer-links a {
+                justify-content: center;
+            }
+
+            .contact-info {
+                align-items: center;
+            }
+
+            .footer-social {
+                justify-content: center;
+            }
+        }
+
+        /* ========== ОНОВЛЕНА ШАПКА ========== */
+        header {
+            background: rgba(0, 0, 0, 0.95);
+            color: white;
+            padding: 15px 0;
+            border-bottom: 1px solid #333;
+            position: relative;
+            z-index: 1001;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .logo span {
+            color: #007aff;
+        }
+
+        /* СКЛЯНІ КНОПКИ КОРИСТУВАЧА */
+        .user-actions {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .glass-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .glass-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .glass-btn:hover::before {
+            left: 100%;
+        }
+
+        .glass-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 122, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .cart-count, .wishlist-count {
+            background: #e53935;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+
+        .wishlist-count {
+            background: #ff4081;
+        }
+
+        /* ПОШУК */
+        .search-bar {
+            position: relative;
+            flex-grow: 1;
+            margin: 0 30px;
+            max-width: 500px;
+        }
+
+        .search-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 12px 45px 12px 20px;
+            border-radius: 20px;
+            border: none;
+            font-size: 16px;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            color: #666;
+            font-size: 16px;
+        }
+
+        /* СТИЛІ ДЛЯ ПОШУКУ */
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            max-height: 400px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+        }
+
+        .search-result-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: background 0.3s;
+        }
+
+        .search-result-item:hover {
+            background: #f8f9fa;
+        }
+
+        .search-result-item img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+        }
+
+        .search-result-info h4 {
+            margin: 0 0 5px 0;
+            color: #333;
+        }
+
+        .search-result-info .price {
+            color: #e53935;
+            font-weight: bold;
+        }
+
+        .search-result-info .model {
+            color: #666;
+            font-size: 12px;
+        }
+
+        .no-results {
+            padding: 20px;
+            text-align: center;
+            color: #666;
+        }
+
+        .similar-products {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        /* ========== ОНОВЛЕНІ ВКЛАДКИ КАТЕГОРІЙ ========== */
+        .category-tabs {
+            background: #fff;
+            padding: 0 20px;
+            border-bottom: 1px solid #e1e1e1;
+            position: relative;
+            z-index: 998;
+        }
+
+        .tabs-container {
+            display: flex;
+            list-style: none;
+            gap: 5px;
+            justify-content: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .glass-tab {
+            padding: 18px 30px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            margin: 10px 5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-tab::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 122, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .glass-tab:hover::before {
+            left: 100%;
+        }
+
+        .glass-tab:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 122, 255, 0.2);
+            border-color: rgba(0, 122, 255, 0.3);
+        }
+
+        .glass-tab.active {
+            background: rgba(0, 122, 255, 0.1);
+            border-color: rgba(0, 122, 255, 0.3);
+            box-shadow: 0 5px 15px rgba(0, 122, 255, 0.2);
+            color: #007aff;
+            transform: translateY(-2px);
+        }
+
+        .glass-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 3px;
+            background: #007aff;
+            border-radius: 2px;
+        }
+
+        .tab-icon {
+            font-size: 18px;
+        }
+
+        /* АНІМАЦІЯ ПЕРЕМИКАННЯ */
+        @keyframes tabSwitch {
+            0% {
+                transform: scale(0.95);
+                opacity: 0.7;
+            }
+            50% {
+                transform: scale(1.02);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .glass-tab.active {
+            animation: tabSwitch 0.3s ease-out;
+        }
+
+        /* СЕРДЕЧКО НА КАРТЦІ ТОВАРУ */
+        .wishlist-heart {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 35px;
+            height: 35px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            z-index: 2;
+        }
+
+        .wishlist-heart:hover {
+            background: white;
+            transform: scale(1.1);
+        }
+
+        .wishlist-heart.active {
+            background: #ff4081;
+        }
+
+        .wishlist-heart.active i {
+            color: white;
+        }
+
+        .wishlist-heart i {
+            color: #666;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .wishlist-heart.active i {
+            color: white;
+        }
+
+        .wishlist-heart:hover i {
+            color: #ff4081;
+        }
+
+        .wishlist-heart.active:hover i {
+            color: white;
+        }
+
+        /* ПЛАВАЮЧІ ФІЛЬТРИ */
+        .sticky-filters {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            width: 320px;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            z-index: 999;
+            max-height: 80vh;
+            overflow-y: auto;
+            display: none;
+            border: 2px solid #007aff;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s ease;
+        }
+
+        .sticky-filters.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .sticky-filters.visible {
+            display: block;
+            animation: slideInRight 0.3s ease-out;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .sticky-filters h3 {
+            margin-bottom: 15px;
+            color: #000;
+            font-size: 18px;
+            border-bottom: 2px solid #007aff;
+            padding-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .filter-toggle {
+            position: fixed;
+            top: 120px;
+            right: 20px;
+            background: #007aff;
+            color: white;
+            border: none;
+            padding: 12px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0,122,255,0.3);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-toggle:hover {
+            background: #0056cc;
+            transform: translateY(-2px);
+        }
+
+        .close-filters {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #666;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+        }
+
+        .sticky-filter-group {
+            margin-bottom: 20px;
+        }
+
+        .sticky-filter-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sticky-price-range {
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        .sticky-model-filters {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .sticky-model-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sticky-model-checkbox input {
+            width: 18px;
+            height: 18px;
+        }
+
+        .price-display {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Головна секція */
+        .hero {
+            background: linear-gradient(135deg, #000, #333);
+            color: white;
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 20px;
+            opacity: 0.9;
+        }
+
+        /* Інформаційні блоки */
+        .benefits {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            align-items: start;
+        }
+
+        .benefit-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            border: 1px solid #e1e1e1;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .benefit-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+            color: #007aff;
+        }
+
+        .benefit-card h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #000;
+        }
+
+        .benefit-card p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* Адаптивність для планшетів */
+        @media (max-width: 1024px) {
+            .benefits-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+        }
+
+        /* Адаптивність для мобільних */
+        @media (max-width: 768px) {
+            .benefits-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+        }
+
+        /* Фільтри - ПРИБРАНО */
+        .filters {
+            display: none !important;
+        }
+
+        /* ОНОВЛЕНІ БАНЕРИ РОЗІГРАШУ */
+        .giveaway-banner {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #8e44ad 100%);
+            color: white;
+            padding: 40px 30px;
+            margin: 30px auto;
+            border-radius: 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            max-width: 1200px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            min-height: 350px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .giveaway-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .giveaway-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .giveaway-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            opacity: 0.95;
+            max-width: 800px;
+            line-height: 1.5;
+        }
+
+        .prize-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 1000px;
+            margin: 20px 0;
+        }
+
+        .prize-item {
+            background: rgba(255,255,255,0.15);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            text-align: center;
+            flex: 1;
+            margin: 0 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .prize-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .prize-item.main-prize {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .prize-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .prize-name {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .prize-condition {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .giveaway-timer {
+            background: rgba(255,255,255,0.2);
+            padding: 20px 30px;
+            border-radius: 15px;
+            display: inline-block;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.3);
+            margin: 20px 0;
+        }
+
+        .timer-title {
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            opacity: 0.9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .timer-numbers {
+            font-size: 2.2rem;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.4);
+        }
+
+        .giveaway-cta {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            color: white;
+            border: none;
+            padding: 18px 35px;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(255,107,107,0.4);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .giveaway-cta:hover {
+            background: linear-gradient(45deg, #ff5252, #ff7b7b);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 12px 30px rgba(255,107,107,0.6);
+        }
+
+        .banner-decoration {
+            position: absolute;
+            top: -80px;
+            right: -80px;
+            width: 250px;
+            height: 250px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .banner-decoration-2 {
+            position: absolute;
+            bottom: -60px;
+            left: -60px;
+            width: 200px;
+            height: 200px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .participants-count {
+            margin-top: 20px;
+            font-size: 1rem;
+            opacity: 0.8;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .store-logo {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+        }
+
+        .store-logo span {
+            color: #007aff;
+        }
+
+        /* Адаптивність для мобільних */
+        @media (max-width: 768px) {
+            .giveaway-banner {
+                padding: 30px 20px;
+                min-height: 300px;
+            }
+
+            .giveaway-title {
+                font-size: 1.8rem;
+                gap: 10px;
+            }
+
+            .giveaway-subtitle {
+                font-size: 1rem;
+            }
+
+            .prize-section {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .prize-item {
+                margin: 5px 0;
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .timer-numbers {
+                font-size: 1.8rem;
+            }
+
+            .giveaway-cta {
+                padding: 15px 25px;
+                font-size: 1.1rem;
+            }
+
+            .store-logo {
+                font-size: 1.6rem;
+            }
+        }
+
+        /* Каталог товарів */
+        .products {
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .category-title {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 32px;
+            color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .category-title-icon {
+            color: #007aff;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid #e1e1e1;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .product-card:active {
+            transform: scale(0.98);
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: contain;
+            margin-bottom: 15px;
+            transition: transform 0.3s;
+        }
+
+        .product-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .product-card h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #000;
+            min-height: 44px;
+        }
+
+        .model-badge {
+            display: inline-block;
+            background: #007aff;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        .specs {
+            color: #666;
+            font-size: 14px;
+            margin: 8px 0;
+            min-height: 20px;
+        }
+
+        .price {
+            color: #e53935;
+            font-weight: bold;
+            font-size: 22px;
+            margin: 15px 0;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .details-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            flex: 1;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .details-btn:hover {
+            background: #545b62;
+        }
+
+        .buy-btn {
+            background: #007aff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            flex: 2;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .buy-btn:hover {
+            background: #0056cc;
+        }
+
+        /* СТИЛІ ДЛЯ ОБРАНОГО */
+        .empty-wishlist {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-wishlist i {
+            font-size: 80px;
+            margin-bottom: 20px;
+            color: #ccc;
+        }
+
+        /* Адаптивність */
+        @media (max-width: 768px) {
+            .hamburger-menu {
+                top: 15px;
+                left: 15px;
+            }
+
+            .hamburger-btn {
+                width: 35px;
+                height: 35px;
+            }
+
+            .mobile-menu {
+                width: 280px;
+            }
+
+            .header-top {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .search-bar {
+                margin: 10px 0;
+                max-width: 100%;
+            }
+            
+            .tabs-container {
+                flex-wrap: wrap;
+            }
+            
+            .glass-tab {
+                padding: 15px 20px;
+            }
+            
+            .hero h1 {
+                font-size: 36px;
+            }
+            
+            .model-filters {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            }
+
+            .sticky-filters {
+                width: 90%;
+                right: 5%;
+                left: 5%;
+            }
+
+            .filter-toggle {
+                top: 80px;
+                right: 10px;
+            }
+
+            .product-actions {
+                flex-direction: column;
+            }
+
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .user-actions {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+            }
+
+            .wishlist-heart {
+                top: 10px;
+                right: 10px;
+                width: 30px;
+                height: 30px;
+            }
+
+            /* Адаптивність для системи акаунтів */
+            .auth-content,
+            .profile-content,
+            .admin-content {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            .profile-actions {
+                flex-direction: column;
+            }
+
+            .admin-table {
+                font-size: 12px;
+            }
+
+            .admin-actions {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .mobile-menu {
+                width: 100%;
+            }
+            
+            .hamburger-menu {
+                top: 10px;
+                left: 10px;
+            }
+        }
+
+        /* Анімації */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .product-card {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        /* Стилі для сповіщень */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            z-index: 10000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            animation: slideInRight 0.3s ease-out;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .notification.error {
+            background: #e53935;
+        }
+
+        .notification.info {
+            background: #007aff;
+        }
+
+        .notification.wishlist {
+            background: #ff4081;
+        }
+    </style>
+</head>
+<body>
+    <!-- Гамбургер-меню -->
+    <div class="hamburger-menu">
+        <div class="hamburger-btn" id="hamburger-btn">
+            <div class="hamburger-line"></div>
+            <div class="hamburger-line"></div>
+            <div class="hamburger-line"></div>
+        </div>
+    </div>
+
+    <!-- Бокове меню -->
+    <div class="mobile-menu" id="mobile-menu">
+        <div class="menu-header">
+            <div class="logo">i<span>Market Sell</span></div>
+        </div>
+        
+        <ul class="menu-items">
+            <li class="menu-item">
+                <a href="info.html#about">
+                    <i class="fas fa-info-circle"></i>
+                    Про нас
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="info.html#contacts">
+                    <i class="fas fa-phone"></i>
+                    Контактні дані
+                </a>
+            </li>
+            
+            <div class="menu-divider"></div>
+            
+            <li class="menu-item">
+                <a href="https://t.me/AppleStoreUk_bot" target="_blank">
+                    <i class="fab fa-telegram"></i>
+                    Telegram
+                </a>
+            </li>
+            
+            <div class="menu-divider"></div>
+            
+            <li class="menu-item">
+                <a href="support.html">
+                    <i class="fas fa-question-circle"></i>
+                    Допомога / Підтримка
+                </a>
+            </li>
+        </ul>
+
+        <div class="social-links">
+            <a href="#" class="social-link">
+                <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="#" class="social-link">
+                <i class="fab fa-instagram"></i>
+            </a>
+            <a href="https://t.me/AppleStoreUk_bot" target="_blank" class="social-link">
+                <i class="fab fa-telegram"></i>
+            </a>
+            <a href="#" class="social-link">
+                <i class="fab fa-youtube"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- Оверлей для закриття меню -->
+    <div class="menu-overlay" id="menu-overlay"></div>
+
+    <!-- Модальні вікна для системи акаунтів -->
+    <!-- Вікно авторизації -->
+    <div class="auth-modal" id="auth-modal">
+        <div class="auth-content">
+            <button class="close-auth" onclick="closeAuthModal()">×</button>
+            <div class="auth-tabs">
+                <div class="auth-tab active" onclick="switchAuthTab('login')">Увійти</div>
+                <div class="auth-tab" onclick="switchAuthTab('register')">Реєстрація</div>
+            </div>
+
+            <!-- Форма входу -->
+            <div class="auth-form active" id="login-form">
+                <div class="form-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" placeholder="Ваш email">
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Пароль</label>
+                    <input type="password" id="login-password" placeholder="Ваш пароль">
+                </div>
+                <button class="auth-btn" onclick="login()">Увійти</button>
+                <div class="auth-switch">
+                    Ще не маєте акаунту? <a onclick="switchAuthTab('register')">Зареєструватися</a>
+                </div>
+            </div>
+
+            <!-- Форма реєстрації -->
+            <div class="auth-form" id="register-form">
+                <div class="form-group">
+                    <label for="register-name">Ім'я</label>
+                    <input type="text" id="register-name" placeholder="Ваше ім'я">
+                </div>
+                <div class="form-group">
+                    <label for="register-email">Email</label>
+                    <input type="email" id="register-email" placeholder="Ваш email">
+                </div>
+                <div class="form-group">
+                    <label for="register-password">Пароль</label>
+                    <input type="password" id="register-password" placeholder="Створіть пароль">
+                </div>
+                <div class="form-group">
+                    <label for="register-confirm">Підтвердження пароля</label>
+                    <input type="password" id="register-confirm" placeholder="Повторіть пароль">
+                </div>
+                <button class="auth-btn" onclick="register()">Зареєструватися</button>
+                <div class="auth-switch">
+                    Вже маєте акаунт? <a onclick="switchAuthTab('login')">Увійти</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Профіль користувача -->
+    <div class="user-profile" id="user-profile">
+        <div class="profile-content">
+            <button class="close-auth" onclick="closeProfile()">×</button>
+            <div class="profile-header">
+                <div class="profile-avatar" id="profile-avatar">U</div>
+                <div class="profile-info">
+                    <h3 id="profile-name">Користувач</h3>
+                    <p id="profile-email">user@example.com</p>
+                </div>
+                <div class="admin-badge" id="admin-badge" style="display: none;">ADMIN</div>
+            </div>
+
+            <div class="profile-section">
+                <h4><i class="fas fa-shopping-bag"></i> Мої замовлення</h4>
+                <p id="orders-count">У вас ще немає замовлень</p>
+            </div>
+
+            <div class="profile-section">
+                <h4><i class="fas fa-heart"></i> Обрані товари</h4>
+                <p id="wishlist-count">В обраному: <span id="wishlist-items-count">0</span> товарів</p>
+            </div>
+
+            <div class="profile-actions">
+                <button class="profile-btn primary" id="admin-panel-btn" style="display: none;" onclick="openAdminPanel()">
+                    <i class="fas fa-cog"></i> Адмін-панель
+                </button>
+                <button class="profile-btn secondary" onclick="closeProfile()">
+                    <i class="fas fa-times"></i> Закрити
+                </button>
+                <button class="profile-btn danger" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Вийти
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Адмін панель -->
+    <div class="admin-panel" id="admin-panel">
+        <div class="admin-content">
+            <button class="close-auth" onclick="closeAdminPanel()">×</button>
+            <h2 style="margin-bottom: 20px;"><i class="fas fa-cog"></i> Адмін-панель</h2>
+            
+            <div class="admin-tabs">
+                <div class="admin-tab active" onclick="switchAdminTab('products')">Товари</div>
+                <div class="admin-tab" onclick="switchAdminTab('users')">Користувачі</div>
+                <div class="admin-tab" onclick="switchAdminTab('orders')">Замовлення</div>
+            </div>
+
+            <!-- Управління товарами -->
+            <div class="admin-section active" id="products-section">
+                <h4>Управління товарами</h4>
+                <button class="auth-btn" onclick="showAddProductForm()" style="margin-bottom: 15px;">
+                    <i class="fas fa-plus"></i> Додати товар
+                </button>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Назва</th>
+                            <th>Ціна</th>
+                            <th>Категорія</th>
+                            <th>Дії</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-products-table">
+                        <!-- Товари будуть додані через JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Управління користувачами -->
+            <div class="admin-section" id="users-section">
+                <h4>Управління користувачами</h4>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Ім'я</th>
+                            <th>Email</th>
+                            <th>Статус</th>
+                            <th>Дії</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-users-table">
+                        <!-- Користувачі будуть додані через JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Управління замовленнями -->
+            <div class="admin-section" id="orders-section">
+                <h4>Управління замовленнями</h4>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Користувач</th>
+                            <th>Сума</th>
+                            <th>Статус</th>
+                            <th>Дії</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-orders-table">
+                        <!-- Замовлення будуть додані через JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Шапка -->
+    <header>
+        <div class="header-top">
+            <div class="logo">i<span>Market Sell</span></div>
+            <div class="search-bar">
+                <div class="search-container">
+                    <input type="text" id="search-input" placeholder="Пошук iPhone, iPad, Mac..." oninput="searchProducts()">
+                    <i class="fas fa-search search-icon"></i>
+                    <div class="search-results" id="search-results"></div>
+                </div>
+            </div>
+            <div class="user-actions">
+                <!-- "Обране" і "Кошик" -->
+                <a href="javascript:void(0)" onclick="openWishlist()" class="glass-btn">
+                    <i class="fas fa-heart"></i>
+                    Обране (<span class="wishlist-count">0</span>)
+                </a>
+                <a href="javascript:void(0)" onclick="openCart()" class="glass-btn">
+                    <i class="fas fa-shopping-cart"></i>
+                    Кошик (<span class="cart-count">0</span>)
+                </a>
+                <!-- "Увійти" максимально праворуч -->
+                <a href="javascript:void(0)" class="glass-btn" onclick="handleLogin(event)" id="login-btn">
+                    <i class="fas fa-user"></i>
+                    Увійти
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Кнопка відкриття фільтрів -->
+    <button class="filter-toggle" onclick="toggleStickyFilters()">
+        <i class="fas fa-filter"></i>
+        Фільтри
+    </button>
+
+    <!-- Плаваючі фільтри -->
+    <div class="sticky-filters" id="sticky-filters">
+        <button class="close-filters" onclick="toggleStickyFilters()">
+            <i class="fas fa-times"></i>
+        </button>
+        <h3>
+            <i class="fas fa-sliders-h"></i>
+            Фільтри
+        </h3>
+        
+        <!-- Фільтр цін -->
+        <div class="sticky-filter-group">
+            <label>
+                <i class="fas fa-money-bill-wave"></i>
+                Діапазон цін:
+            </label>
+            <input type="range" class="sticky-price-range" id="sticky-price-range" min="1000" max="200000" step="1000" value="50000">
+            <div class="price-display">
+                <i class="fas fa-tag"></i>
+                До: <span id="sticky-price-value">50 000</span> ₴
+            </div>
+        </div>
+
+        <!-- Фільтр моделей -->
+        <div class="sticky-filter-group">
+            <label>
+                <i class="fas fa-layer-group"></i>
+                Моделі:
+            </label>
+            <div class="sticky-model-filters" id="sticky-model-filters">
+                <!-- Моделі будуть додані через JavaScript -->
+            </div>
+        </div>
+
+        <button class="buy-btn" onclick="applyStickyFilters()" style="margin-top: 20px;">
+            <i class="fas fa-check"></i>
+            Застосувати фільтри
+        </button>
+    </div>
+
+    <!-- Вкладки категорій -->
+    <nav class="category-tabs">
+        <ul class="tabs-container">
+            <li class="glass-tab active" data-category="iphone">
+                <i class="fas fa-mobile-alt tab-icon"></i>
+                iPhone
+            </li>
+            <li class="glass-tab" data-category="ipad">
+                <i class="fas fa-tablet-alt tab-icon"></i>
+                iPad
+            </li>
+            <li class="glass-tab" data-category="macbook">
+                <i class="fas fa-laptop tab-icon"></i>
+                MacBook
+            </li>
+            <li class="glass-tab" data-category="apple-watch">
+                <i class="fas fa-clock tab-icon"></i>
+                Apple Watch
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Головна секція -->
+    <section class="hero">
+        <h1>Офіційний партнер Apple</h1>
+        <p>Найновіша техніка Apple за найкращими цінами</p>
+    </section>
+
+    <!-- Інформаційні блоки -->
+    <section class="benefits">
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3>100% Безпечна оплата</h3>
+                <p>Захищені платежі через перевірені платіжні системи</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-sync-alt"></i>
+                </div>
+                <h3>14 днів на повернення</h3>
+                <p>Гарантія повернення коштів протягом 14 днів</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-headset"></i>
+                </div>
+                <h3>Підтримка 24/7</h3>
+                <p>Наша служба підтримки завжди готова допомогти</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-shipping-fast"></i>
+                </div>
+                <h3>Безкоштовна доставка</h3>
+                <p>Безкоштовна доставка при замовленні від 1000 грн</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Контент для iPhone -->
+    <div class="category-content active" id="iphone-content">
+        <!-- ЄДИНИЙ БАНЕР РОЗІГРАШУ -->
+        <section class="giveaway-banner">
+            <div class="banner-decoration"></div>
+            <div class="banner-decoration-2"></div>
+            <div class="giveaway-content">
+                <div class="store-logo">i<span>Market Sell</span></div>
+                <h2 class="giveaway-title">
+                    🎉 РОЗІГРАШ ВІД iMarket Sell!
+                </h2>
+                <p class="giveaway-subtitle">
+                    🎧 Зареєструй акаунт — і вже береш участь у розіграші навушників Apple!<br>
+                    📱 Зроби покупку — і отримай шанс виграти новенький iPhone 15 Pro Max!
+                </p>
+                
+                <div class="prize-section">
+                    <div class="prize-item">
+                        <div class="prize-icon">🎧</div>
+                        <div class="prize-name">AirPods Pro</div>
+                        <div class="prize-condition">За реєстрацію</div>
+                    </div>
+                    <div class="prize-item main-prize">
+                        <div class="prize-icon">📱</div>
+                        <div class="prize-name">iPhone 15 Pro Max</div>
+                        <div class="prize-condition">За покупку</div>
+                    </div>
+                </div>
+
+                <div class="giveaway-timer">
+                    <div class="timer-title">
+                        <i class="fas fa-clock"></i>
+                        Розіграш відбудеться 27 листопада
+                    </div>
+                    <div class="timer-numbers" id="iphone-timer">27.11.2024</div>
+                </div>
+
+                <button class="giveaway-cta" onclick="participateInGiveaway()">
+                    <i class="fas fa-ticket-alt"></i>
+                    УЧАСТЬ У РОЗІГРАШІ
+                </button>
+                
+                <div class="participants-count">
+                    <i class="fas fa-users"></i>
+                    Вже беруть участь: <strong>2,458</strong> осіб
+                </div>
+            </div>
+        </section>
+
+        <!-- Каталог iPhone -->
+        <section class="products">
+            <h2 class="category-title">
+                <i class="fas fa-mobile-alt category-title-icon"></i>
+                Каталог iPhone
+            </h2>
+            <div class="product-grid" id="iphone-grid"></div>
+        </section>
+    </div>
+
+    <!-- Контент для iPad -->
+    <div class="category-content" id="ipad-content">
+        <!-- ЄДИНИЙ БАНЕР РОЗІГРАШУ -->
+        <section class="giveaway-banner">
+            <div class="banner-decoration"></div>
+            <div class="banner-decoration-2"></div>
+            <div class="giveaway-content">
+                <div class="store-logo">i<span>Market Sell</span></div>
+                <h2 class="giveaway-title">
+                    🎉 РОЗІГРАШ ВІД iMarket Sell!
+                </h2>
+                <p class="giveaway-subtitle">
+                    🎧 Зареєструй акаунт — і вже береш участь у розіграші навушників Apple!<br>
+                    📱 Зроби покупку — і отримай шанс виграти новенький iPhone 15 Pro Max!
+                </p>
+                
+                <div class="prize-section">
+                    <div class="prize-item">
+                        <div class="prize-icon">🎧</div>
+                        <div class="prize-name">AirPods Pro</div>
+                        <div class="prize-condition">За реєстрацію</div>
+                    </div>
+                    <div class="prize-item main-prize">
+                        <div class="prize-icon">📱</div>
+                        <div class="prize-name">iPhone 15 Pro Max</div>
+                        <div class="prize-condition">За покупку</div>
+                    </div>
+                </div>
+
+                <div class="giveaway-timer">
+                    <div class="timer-title">
+                        <i class="fas fa-clock"></i>
+                        Розіграш відбудеться 27 листопада
+                    </div>
+                    <div class="timer-numbers" id="ipad-timer">27.11.2024</div>
+                </div>
+
+                <button class="giveaway-cta" onclick="participateInGiveaway()">
+                    <i class="fas fa-ticket-alt"></i>
+                    УЧАСТЬ У РОЗІГРАШІ
+                </button>
+                
+                <div class="participants-count">
+                    <i class="fas fa-users"></i>
+                    Вже беруть участь: <strong>2,458</strong> осіб
+                </div>
+            </div>
+        </section>
+
+        <!-- Каталог iPad -->
+        <section class="products">
+            <h2 class="category-title">
+                <i class="fas fa-tablet-alt category-title-icon"></i>
+                Каталог iPad
+            </h2>
+            <div class="product-grid" id="ipad-grid"></div>
+        </section>
+    </div>
+
+    <!-- Контент для MacBook -->
+    <div class="category-content" id="macbook-content">
+        <!-- ЄДИНИЙ БАНЕР РОЗІГРАШУ -->
+        <section class="giveaway-banner">
+            <div class="banner-decoration"></div>
+            <div class="banner-decoration-2"></div>
+            <div class="giveaway-content">
+                <div class="store-logo">i<span>Market Sell</span></div>
+                <h2 class="giveaway-title">
+                    🎉 РОЗІГРАШ ВІД iMarket Sell!
+                </h2>
+                <p class="giveaway-subtitle">
+                    🎧 Зареєструй акаунт — і вже береш участь у розіграші навушників Apple!<br>
+                    📱 Зроби покупку — і отримай шанс виграти новенький iPhone 15 Pro Max!
+                </p>
+                
+                <div class="prize-section">
+                    <div class="prize-item">
+                        <div class="prize-icon">🎧</div>
+                        <div class="prize-name">AirPods Pro</div>
+                        <div class="prize-condition">За реєстрацію</div>
+                    </div>
+                    <div class="prize-item main-prize">
+                        <div class="prize-icon">📱</div>
+                        <div class="prize-name">iPhone 15 Pro Max</div>
+                        <div class="prize-condition">За покупку</div>
+                    </div>
+                </div>
+
+                <div class="giveaway-timer">
+                    <div class="timer-title">
+                        <i class="fas fa-clock"></i>
+                        Розіграш відбудеться 27 листопада
+                    </div>
+                    <div class="timer-numbers" id="macbook-timer">27.11.2024</div>
+                </div>
+
+                <button class="giveaway-cta" onclick="participateInGiveaway()">
+                    <i class="fas fa-ticket-alt"></i>
+                    УЧАСТЬ У РОЗІГРАШІ
+                </button>
+                
+                <div class="participants-count">
+                    <i class="fas fa-users"></i>
+                    Вже беруть участь: <strong>2,458</strong> осіб
+                </div>
+            </div>
+        </section>
+
+        <!-- Каталог MacBook -->
+        <section class="products">
+            <h2 class="category-title">
+                <i class="fas fa-laptop category-title-icon"></i>
+                Каталог MacBook
+            </h2>
+            <div class="product-grid" id="macbook-grid"></div>
+        </section>
+    </div>
+
+    <!-- Контент для Apple Watch -->
+    <div class="category-content" id="apple-watch-content">
+        <!-- ЄДИНИЙ БАНЕР РОЗІГРАШУ -->
+        <section class="giveaway-banner">
+            <div class="banner-decoration"></div>
+            <div class="banner-decoration-2"></div>
+            <div class="giveaway-content">
+                <div class="store-logo">i<span>Market Sell</span></div>
+                <h2 class="giveaway-title">
+                    🎉 РОЗІГРАШ ВІД iMarket Sell!
+                </h2>
+                <p class="giveaway-subtitle">
+                    🎧 Зареєструй акаунт — і вже береш участь у розіграші навушників Apple!<br>
+                    📱 Зроби покупку — і отримай шанс виграти новенький iPhone 15 Pro Max!
+                </p>
+                
+                <div class="prize-section">
+                    <div class="prize-item">
+                        <div class="prize-icon">🎧</div>
+                        <div class="prize-name">AirPods Pro</div>
+                        <div class="prize-condition">За реєстрацію</div>
+                    </div>
+                    <div class="prize-item main-prize">
+                        <div class="prize-icon">📱</div>
+                        <div class="prize-name">iPhone 15 Pro Max</div>
+                        <div class="prize-condition">За покупку</div>
+                    </div>
+                </div>
+
+                <div class="giveaway-timer">
+                    <div class="timer-title">
+                        <i class="fas fa-clock"></i>
+                        Розіграш відбудеться 27 листопада
+                    </div>
+                    <div class="timer-numbers" id="apple-watch-timer">27.11.2024</div>
+                </div>
+
+                <button class="giveaway-cta" onclick="participateInGiveaway()">
+                    <i class="fas fa-ticket-alt"></i>
+                    УЧАСТЬ У РОЗІГРАШІ
+                </button>
+                
+                <div class="participants-count">
+                    <i class="fas fa-users"></i>
+                    Вже беруть участь: <strong>2,458</strong> осіб
+                </div>
+            </div>
+        </section>
+
+        <!-- Каталог Apple Watch -->
+        <section class="products">
+            <h2 class="category-title">
+                <i class="fas fa-clock category-title-icon"></i>
+                Каталог Apple Watch
+            </h2>
+            <div class="product-grid" id="apple-watch-grid"></div>
+        </section>
+    </div>
+
+    <!-- Контент для Обраного -->
+    <div class="category-content" id="wishlist-content">
+        <section class="products">
+            <h2 class="category-title">
+                <i class="fas fa-heart category-title-icon"></i>
+                Обрані товари
+            </h2>
+            <div class="product-grid" id="wishlist-grid"></div>
+        </section>
+    </div>
+
+    <!-- СУЧАСНИЙ ФУТЕР -->
+    <footer class="modern-footer">
+        <div class="footer-content">
+            <!-- Колонка 1: Категорії -->
+            <div class="footer-column">
+                <h3>
+                    <i class="fas fa-th-large"></i>
+                    Категорії
+                </h3>
+                <ul class="footer-links">
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-mobile-alt"></i>
+                            iPhone
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-tablet-alt"></i>
+                            iPad
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-laptop"></i>
+                            MacBook
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-clock"></i>
+                            Apple Watch
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-headphones"></i>
+                            AirPods
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Колонка 2: Для покупця -->
+            <div class="footer-column">
+                <h3>
+                    <i class="fas fa-shopping-bag"></i>
+                    Для покупця
+                </h3>
+                <ul class="footer-links">
+                    <li>
+                        <a href="info.html#delivery">
+                            <i class="fas fa-truck"></i>
+                            Доставка і оплата
+                        </a>
+                    </li>
+                    <li>
+                        <a href="info.html#warranty">
+                            <i class="fas fa-shield-alt"></i>
+                            Гарантія
+                        </a>
+                    </li>
+                    <li>
+                        <a href="info.html#blog">
+                            <i class="fas fa-blog"></i>
+                            Блог
+                        </a>
+                    </li>
+                    <li>
+                        <a href="info.html#faq">
+                            <i class="fas fa-question-circle"></i>
+                            FAQ
+                        </a>
+                    </li>
+                    <li>
+                        <a href="info.html#return">
+                            <i class="fas fa-exchange-alt"></i>
+                            Повернення
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Колонка 3: Про компанію -->
+            <div class="footer-column">
+                <h3>
+                    <i class="fas fa-building"></i>
+                    Про компанію
+                </h3>
+                <ul class="footer-links">
+                    <li>
+                        <a href="info.html#about">
+                            <i class="fas fa-info-circle"></i>
+                            Про нас
+                        </a>
+                    </li>
+                    <li>
+                        <a href="info.html#contacts">
+                            <i class="fas fa-phone"></i>
+                            Контакти
+                        </a>
+                    </li>
+                    <li>
+                        <a href="info.html#franchise">
+                            <i class="fas fa-handshake"></i>
+                            Франшиза
+                        </a>
+                    </li>
+                    <li>
+                        <a href="info.html#media">
+                            <i class="fas fa-newspaper"></i>
+                            СМІ про нас
+                        </a>
+                    </li>
+                    <li>
+                        <a href="info.html#career">
+                            <i class="fas fa-briefcase"></i>
+                            Кар'єра
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Колонка 4: Контакти -->
+            <div class="footer-column">
+                <h3>
+                    <i class="fas fa-address-book"></i>
+                    Контакти
+                </h3>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <span>099 949 3089</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>appleStore.mag.ua@gmail.com</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Пн-Нд: 9:00 - 21:00</span>
+                    </div>
+                </div>
+                <div class="footer-social">
+                    <a href="#" class="footer-social-link">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="footer-social-link">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://t.me/AppleStoreUk_bot" target="_blank" class="footer-social-link">
+                        <i class="fab fa-telegram"></i>
+                    </a>
+                    <a href="#" class="footer-social-link">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>
+                <i class="far fa-copyright"></i>
+                2024 iMarket Sell. Офіційний партнер Apple в Україні. Всі права захищені.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Підключаємо JavaScript -->
+    <script src="products.js"></script>
+    <script src="cart.js"></script>
+    <script>
+        // ========== СИСТЕМА АКАУНТІВ ==========
+        
+        // База даних користувачів (в localStorage)
+        let usersDatabase = JSON.parse(localStorage.getItem('storeUsers')) || [];
+        let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+
+        // Ініціалізація адміна при першому запуску
+        function initializeAdmin() {
+            if (usersDatabase.length === 0) {
+                const adminUser = {
+                    id: 1,
+                    name: 'Адміністратор',
+                    email: 'admin@istore.com',
+                    password: 'admin123',
+                    isAdmin: true,
+                    createdAt: new Date().toISOString()
+                };
+                usersDatabase.push(adminUser);
+                saveUsersToStorage();
+                console.log('✅ Адміністратор створений: admin@istore.com / admin123');
+            }
+        }
+
+        // Збереження користувачів в localStorage
+        function saveUsersToStorage() {
+            localStorage.setItem('storeUsers', JSON.stringify(usersDatabase));
+        }
+
+        // Функції для модальних вікон
+        function openAuthModal() {
+            document.getElementById('auth-modal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeAuthModal() {
+            document.getElementById('auth-modal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function switchAuthTab(tab) {
+            // Оновлюємо активні вкладки
+            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+            
+            // Активуємо обрану вкладку
+            document.querySelector(`.auth-tab:nth-child(${tab === 'login' ? 1 : 2})`).classList.add('active');
+            document.getElementById(`${tab}-form`).classList.add('active');
+        }
+
+        // Реєстрація нового користувача
+        function register() {
+            const name = document.getElementById('register-name').value.trim();
+            const email = document.getElementById('register-email').value.trim();
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-confirm').value;
+
+            // Валідація
+            if (!name || !email || !password) {
+                showNotification('❌ Будь ласка, заповніть всі поля', 'error');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showNotification('❌ Паролі не співпадають', 'error');
+                return;
+            }
+
+            if (password.length < 6) {
+                showNotification('❌ Пароль повинен містити щонайменше 6 символів', 'error');
+                return;
+            }
+
+            // Перевірка чи email вже існує
+            if (usersDatabase.find(user => user.email === email)) {
+                showNotification('❌ Користувач з таким email вже існує', 'error');
+                return;
+            }
+
+            // Створення нового користувача
+            const newUser = {
+                id: Date.now(),
+                name: name,
+                email: email,
+                password: password, // У реальному додатку пароль має бути хешований
+                isAdmin: false,
+                createdAt: new Date().toISOString(),
+                orders: [],
+                wishlist: []
+            };
+
+            usersDatabase.push(newUser);
+            saveUsersToStorage();
+
+            showNotification('✅ Реєстрація успішна! Тепер ви можете увійти.', 'success');
+            switchAuthTab('login');
+            
+            // Очищаємо поля
+            document.getElementById('register-name').value = '';
+            document.getElementById('register-email').value = '';
+            document.getElementById('register-password').value = '';
+            document.getElementById('register-confirm').value = '';
+        }
+
+        // Вхід в систему
+        function login() {
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value;
+
+            if (!email || !password) {
+                showNotification('❌ Будь ласка, заповніть всі поля', 'error');
+                return;
+            }
+
+            // Пошук користувача
+            const user = usersDatabase.find(u => u.email === email && u.password === password);
+
+            if (!user) {
+                showNotification('❌ Невірний email або пароль', 'error');
+                return;
+            }
+
+            // Зберігаємо поточного користувача
+            currentUser = user;
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+            showNotification(`✅ Вітаємо, ${user.name}!`, 'success');
+            closeAuthModal();
+            updateUserInterface();
+            
+            // Очищаємо поля
+            document.getElementById('login-email').value = '';
+            document.getElementById('login-password').value = '';
+            
+            // Перенаправляємо на профіль через 1 секунду
+            setTimeout(() => {
+                window.location.href = 'profile.html';
+            }, 1000);
+        }
+
+        // Вихід з системи
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('currentUser');
+            showNotification('🔒 Ви вийшли з системи', 'info');
+            closeProfile();
+            updateUserInterface();
+        }
+
+        // Відкриття профілю
+        function openProfile() {
+            if (!currentUser) {
+                openAuthModal();
+                return;
+            }
+            window.location.href = 'profile.html';
+        }
+
+        function closeProfile() {
+            document.getElementById('user-profile').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Оновлення інформації в профілі
+        function updateProfileInfo() {
+            if (!currentUser) return;
+
+            document.getElementById('profile-name').textContent = currentUser.name;
+            document.getElementById('profile-email').textContent = currentUser.email;
+            document.getElementById('profile-avatar').textContent = currentUser.name.charAt(0).toUpperCase();
+            
+            // Оновлюємо кількість товарів в обраному
+            const wishlistCount = wishlist ? wishlist.length : 0;
+            document.getElementById('wishlist-items-count').textContent = wishlistCount;
+
+            // Показуємо/ховаємо бейдж адміна
+            const adminBadge = document.getElementById('admin-badge');
+            const adminPanelBtn = document.getElementById('admin-panel-btn');
+            
+            if (currentUser.isAdmin) {
+                adminBadge.style.display = 'inline-block';
+                adminPanelBtn.style.display = 'block';
+            } else {
+                adminBadge.style.display = 'none';
+                adminPanelBtn.style.display = 'none';
+            }
+        }
+
+        // Оновлення інтерфейсу користувача
+        function updateUserInterface() {
+            const loginBtn = document.getElementById('login-btn');
+            
+            if (currentUser) {
+                loginBtn.innerHTML = `<i class="fas fa-user"></i> ${currentUser.name}`;
+                loginBtn.onclick = (e) => {
+                    e.preventDefault();
+                    openProfile();
+                };
+            } else {
+                loginBtn.innerHTML = `<i class="fas fa-user"></i> Увійти`;
+                loginBtn.onclick = (e) => {
+                    e.preventDefault();
+                    openAuthModal();
+                };
+            }
+        }
+
+        // Адмін-панель
+        function openAdminPanel() {
+            if (!currentUser || !currentUser.isAdmin) {
+                showNotification('❌ Доступ заборонено', 'error');
+                return;
+            }
+
+            loadAdminData();
+            document.getElementById('admin-panel').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeAdminPanel() {
+            document.getElementById('admin-panel').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function switchAdminTab(tab) {
+            document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+            
+            document.querySelector(`.admin-tab:nth-child(${tab === 'products' ? 1 : tab === 'users' ? 2 : 3})`).classList.add('active');
+            document.getElementById(`${tab}-section`).classList.add('active');
+        }
+
+        function loadAdminData() {
+            loadAdminProducts();
+            loadAdminUsers();
+            loadAdminOrders();
+        }
+
+        function loadAdminProducts() {
+            const table = document.getElementById('admin-products-table');
+            table.innerHTML = '';
+
+            // Отримуємо всі товари з усіх категорій
+            const allProducts = [];
+            Object.values(productsDatabase).forEach(categoryProducts => {
+                allProducts.push(...categoryProducts);
+            });
+
+            if (allProducts.length === 0) {
+                table.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px;">Товарів не знайдено</td></tr>';
+                return;
+            }
+
+            allProducts.forEach(product => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${product.name}</td>
+                    <td>${product.price.toLocaleString('uk-UA')} ₴</td>
+                    <td>${product.category}</td>
+                    <td class="admin-actions">
+                        <button class="admin-btn edit" onclick="editProduct(${product.id}, '${product.category}')">Редагувати</button>
+                        <button class="admin-btn delete" onclick="deleteProduct(${product.id}, '${product.category}')">Видалити</button>
+                    </td>
+                `;
+                table.appendChild(row);
+            });
+        }
+
+        function loadAdminUsers() {
+            const table = document.getElementById('admin-users-table');
+            table.innerHTML = '';
+
+            if (usersDatabase.length === 0) {
+                table.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px;">Користувачів не знайдено</td></tr>';
+                return;
+            }
+
+            usersDatabase.forEach(user => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${user.name}</td>
+                    <td>${user.email}</td>
+                    <td>${user.isAdmin ? 'Адміністратор' : 'Користувач'}</td>
+                    <td class="admin-actions">
+                        <button class="admin-btn toggle" onclick="toggleAdminStatus(${user.id})">
+                            ${user.isAdmin ? 'Забрати права' : 'Зробити адміном'}
+                        </button>
+                        ${user.id !== currentUser.id ? 
+                            `<button class="admin-btn delete" onclick="deleteUser(${user.id})">Видалити</button>` : 
+                            ''
+                        }
+                    </td>
+                `;
+                table.appendChild(row);
+            });
+        }
+
+        function loadAdminOrders() {
+            const table = document.getElementById('admin-orders-table');
+            table.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">Функціонал замовлень в розробці</td></tr>';
+        }
+
+        // Функції адміністрування
+        function toggleAdminStatus(userId) {
+            if (!currentUser || !currentUser.isAdmin) return;
+
+            const user = usersDatabase.find(u => u.id === userId);
+            if (user) {
+                user.isAdmin = !user.isAdmin;
+                saveUsersToStorage();
+                loadAdminUsers();
+                showNotification(`✅ Права ${user.isAdmin ? 'надані' : 'забрані'} для ${user.name}`, 'success');
+            }
+        }
+
+        function deleteUser(userId) {
+            if (!currentUser || !currentUser.isAdmin) return;
+            if (userId === currentUser.id) {
+                showNotification('❌ Не можна видалити власний акаунт', 'error');
+                return;
+            }
+
+            if (confirm('Ви впевнені, що хочете видалити цього користувача?')) {
+                usersDatabase = usersDatabase.filter(u => u.id !== userId);
+                saveUsersToStorage();
+                loadAdminUsers();
+                showNotification('✅ Користувача видалено', 'success');
+            }
+        }
+
+        function editProduct(productId, category) {
+            showNotification('⚙️ Редагування товару в розробці', 'info');
+        }
+
+        function deleteProduct(productId, category) {
+            if (!currentUser || !currentUser.isAdmin) return;
+
+            if (confirm('Ви впевнені, що хочете видалити цей товар?')) {
+                // Видалення товару з бази даних
+                const categoryProducts = productsDatabase[category];
+                if (categoryProducts) {
+                    productsDatabase[category] = categoryProducts.filter(p => p.id !== productId);
+                    // Оновлюємо localStorage з товарами
+                    const allProducts = [];
+                    Object.values(productsDatabase).forEach(catProducts => {
+                        allProducts.push(...catProducts);
+                    });
+                    localStorage.setItem('storeProducts', JSON.stringify(allProducts));
+                    
+                    loadAdminProducts();
+                    displayProducts(category); // Оновлюємо відображення на сайті
+                    showNotification('✅ Товар видалено', 'success');
+                }
+            }
+        }
+
+        function showAddProductForm() {
+            showNotification('📦 Додавання товару в розробці', 'info');
+        }
+
+        // ========== ІНІЦІАЛІЗАЦІЯ СИСТЕМИ АКАУНТІВ ==========
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeAdmin();
+            updateUserInterface();
+            
+            // Якщо користувач вже авторизований, оновлюємо інтерфейс
+            if (currentUser) {
+                console.log(`✅ Авторизований користувач: ${currentUser.name}`);
+            }
+        });
+
+        // ========== ФУНКЦІОНАЛ ГАМБУРГЕР-МЕНЮ ==========
+        function toggleMobileMenu() {
+            const hamburgerBtn = document.getElementById('hamburger-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const menuOverlay = document.getElementById('menu-overlay');
+            
+            hamburgerBtn.classList.toggle('active');
+            mobileMenu.classList.toggle('active');
+            menuOverlay.classList.toggle('active');
+            
+            document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+        }
+
+        function closeMobileMenu() {
+            const hamburgerBtn = document.getElementById('hamburger-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const menuOverlay = document.getElementById('menu-overlay');
+            
+            hamburgerBtn.classList.remove('active');
+            mobileMenu.classList.remove('active');
+            menuOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Додаємо обробники подій
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburgerBtn = document.getElementById('hamburger-btn');
+            const menuOverlay = document.getElementById('menu-overlay');
+            const menuLinks = document.querySelectorAll('.mobile-menu a');
+            
+            hamburgerBtn.addEventListener('click', toggleMobileMenu);
+            menuOverlay.addEventListener('click', closeMobileMenu);
+            
+            menuLinks.forEach(link => {
+                link.addEventListener('click', closeMobileMenu);
+            });
+            
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeMobileMenu();
+                    closeAuthModal();
+                    closeProfile();
+                    closeAdminPanel();
+                }
+            });
+        });
+
+        // ========== ГЛОБАЛЬНІ ЗМІННІ ==========
+        let currentCategory = 'iphone';
+        let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+        let currentFilters = {
+            iphone: { maxPrice: 50000, models: [] },
+            ipad: { maxPrice: 40000, models: [] },
+            macbook: { maxPrice: 80000, models: [] },
+            'apple-watch': { maxPrice: 15000, models: [] }
+        };
+
+        // Broadcast Channel для синхронізації
+        const syncBroadcast = new BroadcastChannel('products_updates');
+
+        // ФУНКЦІЯ ДЛЯ СПОВІЩЕНЬ
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 3000);
+        }
+
+        // ========== ФУНКЦІЯ ДЛЯ ВІДКРИТТЯ ОБРАНОГО ==========
+        function openWishlist() {
+            console.log('📂 Відкриваємо список обраних товарів...');
+            
+            document.querySelectorAll('.glass-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.category-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            document.getElementById('wishlist-content').classList.add('active');
+            
+            currentCategory = 'wishlist';
+            displayWishlistProducts();
+            
+            console.log('✅ Список обраних товарів відкрито');
+        }
+
+        // ========== ФУНКЦІОНАЛ ОБРАНОГО ==========
+        function toggleWishlist(productId, category, event = null) {
+            if (event) {
+                event.stopPropagation();
+            }
+            
+            const product = getProductById(productId, category);
+            if (!product) return;
+
+            const existingIndex = wishlist.findIndex(item => 
+                item.id === productId && item.category === category
+            );
+
+            if (existingIndex > -1) {
+                wishlist.splice(existingIndex, 1);
+                showNotification('💔 Товар видалено з обраного', 'wishlist');
+            } else {
+                wishlist.push({
+                    id: productId,
+                    category: category,
+                    addedAt: new Date().toISOString()
+                });
+                showNotification('❤️ Товар додано в обране!', 'wishlist');
+            }
+
+            localStorage.setItem('wishlist', JSON.stringify(wishlist));
+            updateWishlistCount();
+            updateHeartIcon(productId, category, existingIndex === -1);
+            
+            if (currentCategory === 'wishlist') {
+                displayWishlistProducts();
+            }
+        }
+
+        function updateWishlistCount() {
+            const wishlistCountElements = document.querySelectorAll('.wishlist-count');
+            wishlistCountElements.forEach(element => {
+                element.textContent = wishlist.length;
+                element.style.display = wishlist.length > 0 ? 'inline-block' : 'none';
+            });
+        }
+
+        function updateHeartIcon(productId, category, isActive) {
+            const heart = document.querySelector(`.wishlist-heart[data-product-id="${productId}"][data-category="${category}"]`);
+            if (heart) {
+                if (isActive) {
+                    heart.classList.add('active');
+                    heart.innerHTML = '<i class="fas fa-heart"></i>';
+                } else {
+                    heart.classList.remove('active');
+                    heart.innerHTML = '<i class="far fa-heart"></i>';
+                }
+            }
+        }
+
+        function isInWishlist(productId, category) {
+            return wishlist.some(item => item.id === productId && item.category === category);
+        }
+
+        function getWishlistProducts() {
+            const wishlistProducts = [];
+            wishlist.forEach(item => {
+                const product = getProductById(item.id, item.category);
+                if (product) {
+                    wishlistProducts.push({
+                        ...product,
+                        addedAt: item.addedAt
+                    });
+                }
+            });
+            return wishlistProducts;
+        }
+
+        function displayWishlistProducts() {
+            const wishlistGrid = document.getElementById('wishlist-grid');
+            if (!wishlistGrid) return;
+
+            const wishlistProducts = getWishlistProducts();
+
+            if (wishlistProducts.length === 0) {
+                wishlistGrid.innerHTML = `
+                    <div class="empty-wishlist" style="grid-column: 1/-1;">
+                        <i class="far fa-heart"></i>
+                        <h3>Обрані товари відсутні</h3>
+                        <p>Додайте товари в обране, натискаючи на сердечко ❤️</p>
+                    </div>
+                `;
+                return;
+            }
+
+            wishlistGrid.innerHTML = '';
+            wishlistProducts.forEach(product => {
+                const mainImage = product.mainImage || (product.images && product.images.length > 0 ? product.images[0] : product.image);
+                
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                productCard.innerHTML = `
+                    <button class="wishlist-heart active" 
+                            data-product-id="${product.id}" 
+                            data-category="${product.category}"
+                            onclick="toggleWishlist(${product.id}, '${product.category}', event)">
+                        <i class="fas fa-heart"></i>
+                    </button>
+                    <img src="${mainImage || 'https://via.placeholder.com/300x300/007AFF/FFFFFF?text=No+Image'}" alt="${product.name}">
+                    <div class="model-badge">${product.model}</div>
+                    <h3>${product.name}</h3>
+                    <div class="specs">${product.specs || ''}</div>
+                    <div class="price">${product.price.toLocaleString('uk-UA')} ₴</div>
+                    <div class="product-actions">
+                        <button class="details-btn" onclick="event.stopPropagation(); openProductDetails(${product.id}, '${product.category}')">
+                            <i class="fas fa-info-circle"></i>
+                            Детальніше
+                        </button>
+                        <button class="buy-btn" onclick="event.stopPropagation(); addToCart(${product.id}, '${product.category}', event)">
+                            <i class="fas fa-shopping-cart"></i>
+                            Купити
+                        </button>
+                    </div>
+                `;
+                
+                productCard.addEventListener('click', function() {
+                    openProductDetails(product.id, product.category);
+                });
+                
+                wishlistGrid.appendChild(productCard);
+            });
+        }
+
+        // ========== ФУНКЦІЯ ДЛЯ КНОПКИ УВІЙТИ ==========
+        function handleLogin(event) {
+            if (event) event.preventDefault();
+            if (currentUser) {
+                openProfile();
+            } else {
+                openAuthModal();
+            }
+        }
+
+        // ========== ФУНКЦІЇ СИНХРОНІЗАЦІЇ ==========
+        function setupSyncListener() {
+            syncBroadcast.onmessage = (event) => {
+                if (event.data.type === 'products_updated') {
+                    console.log('🔄 Отримано оновлення товарів!');
+                    loadProductsFromStorage();
+                    
+                    if (currentCategory) {
+                        if (currentCategory === 'wishlist') {
+                            displayWishlistProducts();
+                        } else {
+                            displayProducts(currentCategory);
+                        }
+                    }
+                    
+                    showNotification('🔄 Каталог оновлено! Нові товари вже доступні.', 'success');
+                }
+            };
+        }
+
+        function loadProductsFromStorage() {
+            const storedProducts = localStorage.getItem('storeProducts');
+            if (storedProducts) {
+                console.log('Завантаження товарів з localStorage...');
+                const adminProducts = JSON.parse(storedProducts);
+                updateMainProductsDatabase(adminProducts);
+            }
+        }
+
+        // ========== ФУНКЦІЇ СКЛЯНИХ КНОПОК ==========
+        function switchCategory(category) {
+            document.querySelectorAll('.glass-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.querySelector(`.glass-tab[data-category="${category}"]`).classList.add('active');
+
+            document.querySelectorAll('.category-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            document.getElementById(`${category}-content`).classList.add('active');
+
+            currentCategory = category;
+            
+            if (category === 'wishlist') {
+                displayWishlistProducts();
+            } else {
+                updateStickyFilters();
+            }
+            
+            setTimeout(() => {
+                if (category !== 'wishlist') {
+                    initStickyFiltersObserver();
+                }
+            }, 100);
+        }
+
+        // ========== ОНОВЛЕНА ФУНКЦІЯ ВІДОБРАЖЕННЯ ТОВАРІВ ==========
+        function displayProducts(category) {
+            const productGrid = document.getElementById(`${category}-grid`);
+            if (!productGrid) return;
+            
+            productGrid.innerHTML = '';
+
+            let filteredProducts = productsDatabase[category] || [];
+            
+            if (currentFilters[category] && currentFilters[category].models.length > 0) {
+                filteredProducts = filteredProducts.filter(product => {
+                    if (!product) return false;
+                    
+                    const priceMatch = product.price <= currentFilters[category].maxPrice;
+                    const modelMatch = currentFilters[category].models.includes(product.model);
+                    return priceMatch && modelMatch;
+                });
+            }
+
+            if (filteredProducts.length === 0) {
+                productGrid.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 40px 20px; color: #666;">
+                        <i class="fas fa-search" style="font-size: 48px; margin-bottom: 15px; opacity: 0.5;"></i>
+                        <h3 style="margin-bottom: 10px;">Товарів не знайдено</h3>
+                        <p>Спробуйте змінити параметри фільтрів</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filteredProducts.forEach(product => {
+                const isWishlisted = isInWishlist(product.id, category);
+                const mainImage = product.mainImage || (product.images && product.images.length > 0 ? product.images[0] : product.image);
+                
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                productCard.innerHTML = `
+                    <button class="wishlist-heart ${isWishlisted ? 'active' : ''}" 
+                            data-product-id="${product.id}" 
+                            data-category="${category}"
+                            onclick="toggleWishlist(${product.id}, '${category}', event)">
+                        <i class="${isWishlisted ? 'fas' : 'far'} fa-heart"></i>
+                    </button>
+                    <img src="${mainImage || 'https://via.placeholder.com/300x300/007AFF/FFFFFF?text=No+Image'}" alt="${product.name}">
+                    <div class="model-badge">${product.model}</div>
+                    <h3>${product.name}</h3>
+                    <div class="specs">${product.specs || ''}</div>
+                    <div class="price">${product.price.toLocaleString('uk-UA')} ₴</div>
+                    <div class="product-actions">
+                        <button class="details-btn" onclick="event.stopPropagation(); openProductDetails(${product.id}, '${category}')">
+                            <i class="fas fa-info-circle"></i>
+                            Детальніше
+                        </button>
+                        <button class="buy-btn" onclick="event.stopPropagation(); addToCart(${product.id}, '${category}', event)">
+                            <i class="fas fa-shopping-cart"></i>
+                            Купити
+                        </button>
+                    </div>
+                `;
+                
+                productCard.addEventListener('click', function() {
+                    openProductDetails(product.id, category);
+                });
+                
+                productGrid.appendChild(productCard);
+            });
+        }
+
+        // ========== ФУНКЦІЇ ФІЛЬТРІВ ==========
+        function toggleStickyFilters() {
+            const stickyFilters = document.getElementById('sticky-filters');
+            stickyFilters.classList.toggle('active');
+            updateStickyFilters();
+        }
+
+        function updateStickyFilters() {
+            if (currentCategory === 'wishlist') return;
+            
+            const modelFilters = document.getElementById('sticky-model-filters');
+            const priceRange = document.getElementById('sticky-price-range');
+            const priceValue = document.getElementById('sticky-price-value');
+            
+            priceRange.value = currentFilters[currentCategory].maxPrice;
+            priceValue.textContent = currentFilters[currentCategory].maxPrice.toLocaleString('uk-UA');
+            
+            modelFilters.innerHTML = '';
+            
+            const models = getAvailableModels(currentCategory);
+            models.forEach(model => {
+                const isChecked = currentFilters[currentCategory].models.includes(model);
+                const checkbox = document.createElement('div');
+                checkbox.className = 'sticky-model-checkbox';
+                checkbox.innerHTML = `
+                    <input type="checkbox" id="sticky-${model.replace(/\s+/g, '-')}" value="${model}" ${isChecked ? 'checked' : ''}>
+                    <label for="sticky-${model.replace(/\s+/g, '-')}">${model}</label>
+                `;
+                modelFilters.appendChild(checkbox);
+            });
+        }
+
+        function getAvailableModels(category) {
+            const models = new Set();
+            if (productsDatabase[category]) {
+                productsDatabase[category].forEach(product => {
+                    if (product && product.model) {
+                        models.add(product.model);
+                    }
+                });
+            }
+            return Array.from(models);
+        }
+
+        function applyStickyFilters() {
+            const priceRange = document.getElementById('sticky-price-range');
+            const checkboxes = document.querySelectorAll('#sticky-model-filters input[type="checkbox"]');
+            
+            currentFilters[currentCategory].maxPrice = parseInt(priceRange.value);
+            currentFilters[currentCategory].models = Array.from(checkboxes)
+                .filter(checkbox => checkbox.checked)
+                .map(checkbox => checkbox.value);
+
+            document.getElementById('sticky-price-value').textContent = 
+                currentFilters[currentCategory].maxPrice.toLocaleString('uk-UA');
+            
+            displayProducts(currentCategory);
+            toggleStickyFilters();
+        }
+
+        function initStickyFiltersObserver() {
+            if (currentCategory === 'wishlist') return;
+            
+            const observer = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach(entry => {
+                        const stickyFilters = document.getElementById('sticky-filters');
+                        if (!entry.isIntersecting) {
+                            stickyFilters.classList.add('visible');
+                        } else {
+                            stickyFilters.classList.remove('visible');
+                        }
+                    });
+                },
+                {
+                    rootMargin: '-100px 0px 0px 0px',
+                    threshold: 0
+                }
+            );
+
+            const mainFilter = document.getElementById(`${currentCategory}-filters`);
+            if (mainFilter) {
+                observer.observe(mainFilter);
+            }
+        }
+
+        function applyFilters(category) {
+            displayProducts(category);
+            updateStickyFilters();
+        }
+
+        // ========== ФУНКЦІЇ ПОШУКУ ==========
+        function searchProducts() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase().trim();
+            const resultsContainer = document.getElementById('search-results');
+            
+            if (!searchTerm) {
+                resultsContainer.style.display = 'none';
+                return;
+            }
+            
+            const searchResults = window.searchProducts(searchTerm);
+            resultsContainer.innerHTML = '';
+            
+            if (searchResults.exact.length === 0 && searchResults.similar.length === 0) {
+                resultsContainer.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-search" style="font-size: 24px; margin-bottom: 10px;"></i>
+                        <p>Товарів не знайдено</p>
+                    </div>
+                `;
+            } else {
+                searchResults.exact.forEach(product => {
+                    const resultItem = createSearchResultItem(product);
+                    resultsContainer.appendChild(resultItem);
+                });
+                
+                if (searchResults.similar.length > 0) {
+                    const similarSection = document.createElement('div');
+                    similarSection.className = 'similar-products';
+                    similarSection.innerHTML = '<h4 style="margin-bottom: 10px; color: #666;">Схожі товари</h4>';
+                    
+                    searchResults.similar.forEach(product => {
+                        const resultItem = createSearchResultItem(product);
+                        similarSection.appendChild(resultItem);
+                    });
+                    
+                    resultsContainer.appendChild(similarSection);
+                }
+            }
+            
+            resultsContainer.style.display = 'block';
+        }
+
+        function createSearchResultItem(product) {
+            const mainImage = product.mainImage || (product.images && product.images.length > 0 ? product.images[0] : product.image);
+            
+            const item = document.createElement('div');
+            item.className = 'search-result-item';
+            item.innerHTML = `
+                <img src="${mainImage || 'https://via.placeholder.com/50x50/007AFF/FFFFFF?text=No+Image'}" alt="${product.name}">
+                <div class="search-result-info">
+                    <h4>${product.name}</h4>
+                    <div class="model">${product.model}</div>
+                    <div class="price">${product.price.toLocaleString('uk-UA')} ₴</div>
+                </div>
+            `;
+            
+            item.addEventListener('click', function() {
+                openProductDetails(product.id, product.category);
+                document.getElementById('search-results').style.display = 'none';
+                document.getElementById('search-input').value = '';
+            });
+            
+            return item;
+        }
+
+        // ========== ФУНКЦІЇ ПЕРЕХОДУ ==========
+        function openProductDetails(productId, category) {
+            const card = event.target.closest('.product-card');
+            if (card) {
+                card.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    card.style.transform = '';
+                }, 150);
+            }
+            
+            setTimeout(() => {
+                window.location.href = `product.html?id=${productId}&category=${category}`;
+            }, 300);
+        }
+
+        // ========== НОВА ФУНКЦІЯ ДЛЯ РОЗІГРАШУ ==========
+        function participateInGiveaway() {
+            if (!currentUser) {
+                // Якщо користувач не авторизований - відкриваємо вікно реєстрації
+                showNotification('🔐 Будь ласка, увійдіть або зареєструйтесь для участі в розіграші', 'info');
+                openAuthModal();
+                return;
+            }
+            
+            // Якщо користувач авторизований - показуємо сповіщення про участь
+            showNotification(`🎉 Дякуємо, ${currentUser.name}! Ви успішно взяли участь у розіграші! Результати будуть оголошені 27 листопада.`, 'success');
+            
+            const btn = event.target;
+            btn.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                btn.style.transform = '';
+            }, 150);
+        }
+
+        function startGiveawayTimers() {
+            // Функція для оновлення таймерів (якщо потрібно буде додати зворотний відлік)
+            function updateTimer(elementId, text) {
+                document.getElementById(elementId).textContent = text;
+            }
+
+            // Встановлюємо дату розіграшу для всіх таймерів
+            updateTimer('iphone-timer', '27.11.2024');
+            updateTimer('ipad-timer', '27.11.2024');
+            updateTimer('macbook-timer', '27.11.2024');
+            updateTimer('apple-watch-timer', '27.11.2024');
+        }
+
+        // ========== ІНІЦІАЛІЗАЦІЯ ==========
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProductsFromStorage();
+            
+            updateWishlistCount();
+            
+            Object.keys(productsDatabase).forEach(category => {
+                if (category !== 'wishlist') {
+                    displayProducts(category);
+                }
+            });
+            
+            document.querySelectorAll('.glass-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const category = this.getAttribute('data-category');
+                    switchCategory(category);
+                });
+            });
+
+            startGiveawayTimers();
+
+            document.querySelectorAll('.price-range').forEach(range => {
+                range.addEventListener('input', function() {
+                    const category = this.closest('.category-content').id.replace('-content', '');
+                    const value = parseInt(this.value);
+                    document.getElementById(`${category}-price-value`).textContent = value.toLocaleString('uk-UA');
+                });
+            });
+
+            const stickyPriceRange = document.getElementById('sticky-price-range');
+            if (stickyPriceRange) {
+                stickyPriceRange.addEventListener('input', function() {
+                    const value = parseInt(this.value);
+                    document.getElementById('sticky-price-value').textContent = value.toLocaleString('uk-UA');
+                });
+            }
+
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.search-bar')) {
+                    document.getElementById('search-results').style.display = 'none';
+                }
+            });
+
+            updateStickyFilters();
+            initStickyFiltersObserver();
+            
+            setupSyncListener();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Допомога / Підтримка - iMarket Sell</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f7;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .support-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .support-header {
+            background: linear-gradient(135deg, #007aff 0%, #0056cc 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .support-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .support-header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .support-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 0;
+            min-height: 600px;
+        }
+
+        /* Бічна панель */
+        .support-sidebar {
+            background: #f8f9fa;
+            padding: 30px;
+            border-right: 1px solid #e1e1e1;
+        }
+
+        .support-info {
+            margin-bottom: 30px;
+        }
+
+        .support-info h3 {
+            color: #007aff;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .contact-methods {
+            list-style: none;
+        }
+
+        .contact-methods li {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #555;
+        }
+
+        .contact-methods i {
+            color: #007aff;
+            width: 20px;
+            text-align: center;
+        }
+
+        .faq-section {
+            margin-top: 30px;
+        }
+
+        .faq-item {
+            margin-bottom: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #007aff;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .faq-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .faq-question {
+            font-weight: bold;
+            color: #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-answer {
+            margin-top: 10px;
+            color: #666;
+            font-size: 14px;
+            display: none;
+        }
+
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+
+        /* Область чату */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 600px;
+        }
+
+        .chat-header {
+            background: #f8f9fa;
+            padding: 20px;
+            border-bottom: 1px solid #e1e1e1;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .agent-avatar {
+            width: 50px;
+            height: 50px;
+            background: #007aff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .agent-info h4 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .agent-info p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .chat-status {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #28a745;
+            font-size: 14px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #28a745;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background: #f8f9fa;
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 15px;
+            border-radius: 15px;
+            position: relative;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background: #007aff;
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message.agent {
+            align-self: flex-start;
+            background: white;
+            color: #333;
+            border: 1px solid #e1e1e1;
+            border-bottom-left-radius: 5px;
+        }
+
+        .message-time {
+            font-size: 12px;
+            opacity: 0.7;
+            margin-top: 5px;
+            text-align: right;
+        }
+
+        .message.agent .message-time {
+            text-align: left;
+        }
+
+        .chat-input-container {
+            padding: 20px;
+            border-top: 1px solid #e1e1e1;
+            background: white;
+        }
+
+        .chat-input-wrapper {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #e1e1e1;
+            border-radius: 25px;
+            resize: none;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            max-height: 120px;
+            min-height: 50px;
+        }
+
+        .chat-input:focus {
+            border-color: #007aff;
+            outline: none;
+        }
+
+        .send-btn {
+            background: #007aff;
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .send-btn:hover {
+            background: #0056cc;
+            transform: scale(1.05);
+        }
+
+        .send-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Стилі для шапки */
+        header {
+            background: rgba(0, 0, 0, 0.95);
+            color: white;
+            padding: 15px 0;
+            border-bottom: 1px solid #333;
+            position: relative;
+            z-index: 1001;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .logo span {
+            color: #007aff;
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .glass-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .glass-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .glass-btn:hover::before {
+            left: 100%;
+        }
+
+        .glass-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 122, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .cart-count, .wishlist-count {
+            background: #e53935;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+
+        .wishlist-count {
+            background: #ff4081;
+        }
+
+        /* Стилі для футера */
+        .modern-footer {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: white;
+            padding: 60px 0 30px 0;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+        }
+
+        .footer-column h3 {
+            color: #007aff;
+            font-size: 18px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-column h3 i {
+            font-size: 20px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: #b0b0b0;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+
+        .footer-links a:hover {
+            color: #007aff;
+            transform: translateX(5px);
+        }
+
+        .footer-links a i {
+            width: 16px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .footer-links a:hover i {
+            color: #007aff;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #b0b0b0;
+            font-size: 14px;
+        }
+
+        .contact-item i {
+            width: 20px;
+            text-align: center;
+            color: #007aff;
+            font-size: 16px;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .footer-social-link {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 18px;
+        }
+
+        .footer-social-link:hover {
+            background: #007aff;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 122, 255, 0.4);
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px 0 20px;
+            border-top: 1px solid #333;
+            margin-top: 50px;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .footer-bottom p {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        /* Адаптивність */
+        @media (max-width: 1024px) {
+            .support-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .support-sidebar {
+                border-right: none;
+                border-bottom: 1px solid #e1e1e1;
+            }
+            
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .support-header h1 {
+                font-size: 2rem;
+            }
+            
+            .support-header {
+                padding: 20px;
+            }
+            
+            .support-sidebar, .chat-header {
+                padding: 20px;
+            }
+            
+            .message {
+                max-width: 85%;
+            }
+            
+            .header-top {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .user-actions {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+                text-align: center;
+            }
+
+            .footer-column h3 {
+                justify-content: center;
+            }
+
+            .footer-links a {
+                justify-content: center;
+            }
+
+            .contact-info {
+                align-items: center;
+            }
+
+            .footer-social {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .support-header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .message {
+                max-width: 90%;
+            }
+            
+            .chat-input-wrapper {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .send-btn {
+                align-self: flex-end;
+            }
+        }
+
+        /* Стилі для сповіщень */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            z-index: 10000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            animation: slideInRight 0.3s ease-out;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .notification.error {
+            background: #e53935;
+        }
+
+        .notification.info {
+            background: #007aff;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Шапка -->
+    <header>
+        <div class="header-top">
+            <div class="logo">iMarket <span>Sell</span></div>
+            <div class="user-actions">
+                <a href="javascript:void(0)" onclick="openCart()" class="glass-btn">
+                    <i class="fas fa-shopping-cart"></i>
+                    Кошик (<span class="cart-count">0</span>)
+                </a>
+                <a href="index.html" class="glass-btn">
+                    <i class="fas fa-store"></i>
+                    Магазин
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Основний контент -->
+    <main class="main-content">
+        <div class="support-container">
+            <div class="support-header">
+                <h1>
+                    <i class="fas fa-headset"></i>
+                    Служба підтримки
+                </h1>
+                <p>Ми завжди готові допомогти вам з будь-якими питаннями</p>
+            </div>
+            
+            <div class="support-content">
+                <!-- Бічна панель з інформацією -->
+                <div class="support-sidebar">
+                    <div class="support-info">
+                        <h3><i class="fas fa-clock"></i> Години роботи</h3>
+                        <p>Пн-Нд: 9:00 - 21:00</p>
+                    </div>
+                    
+                    <div class="support-info">
+                        <h3><i class="fas fa-phone"></i> Контакти</h3>
+                        <ul class="contact-methods">
+                            <li>
+                                <i class="fas fa-phone"></i>
+                                <span>099 949 3089</span>
+                            </li>
+                            <li>
+                                <i class="fas fa-envelope"></i>
+                                <span>support@imarket.com</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="faq-section">
+                        <h3><i class="fas fa-question-circle"></i> Часті запитання</h3>
+                        <div class="faq-item" onclick="toggleFAQ(this)">
+                            <div class="faq-question">
+                                Як оформити замовлення?
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                Оберіть товар, додайте його в кошик та перейдіть до оформлення замовлення.
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item" onclick="toggleFAQ(this)">
+                            <div class="faq-question">
+                                Які способи оплати?
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                Ми приймаємо картки Visa/Mastercard, Apple Pay, Google Pay та банківські перекази.
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item" onclick="toggleFAQ(this)">
+                            <div class="faq-question">
+                                Чи є гарантія на товари?
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                Так, на всі товари діє офіційна гарантія Apple та додаткова гарантія магазину.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Область чату -->
+                <div class="chat-container">
+                    <div class="chat-header">
+                        <div class="agent-avatar">М</div>
+                        <div class="agent-info">
+                            <h4>Марія, консультант</h4>
+                            <p>Служба підтримки iMarket Sell</p>
+                        </div>
+                        <div class="chat-status">
+                            <div class="status-dot"></div>
+                            <span>Online</span>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-messages" id="chat-messages">
+                        <!-- Повідомлення будуть додаватись тут -->
+                    </div>
+                    
+                    <div class="chat-input-container">
+                        <div class="chat-input-wrapper">
+                            <textarea 
+                                class="chat-input" 
+                                id="message-input" 
+                                placeholder="Введіть ваше повідомлення..."
+                                rows="1"
+                            ></textarea>
+                            <button class="send-btn" id="send-btn" onclick="sendMessage()">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Футер -->
+    <footer class="modern-footer">
+        <div class="footer-content">
+            <!-- Колонка 1: Категорії -->
+            <div class="footer-column">
+                <h3>
+                    <i class="fas fa-th-large"></i>
+                    Категорії
+                </h3>
+                <ul class="footer-links">
+                    <li>
+                        <a href="index.html">
+                            <i class="fas fa-mobile-alt"></i>
+                            iPhone
+                        </a>
+                    </li>
+                    <li>
+                        <a href="index.html">
+                            <i class="fas fa-tablet-alt"></i>
+                            iPad
+                        </a>
+                    </li>
+                    <li>
+                        <a href="index.html">
+                            <i class="fas fa-laptop"></i>
+                            MacBook
+                        </a>
+                    </li>
+                    <li>
+                        <a href="index.html">
+                            <i class="fas fa-clock"></i>
+                            Apple Watch
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Колонка 2: Для покупця -->
+            <div class="footer-column">
+                <h3>
+                    <i class="fas fa-shopping-bag"></i>
+                    Для покупця
+                </h3>
+                <ul class="footer-links">
+                    <li>
+                        <a href="info.html#delivery">
+                            <i class="fas fa-truck"></i>
+                            Доставка і оплата
+                        </a>
+                    </li>
+                    <li>
+                        <a href="info.html#warranty">
+                            <i class="fas fa-shield-alt"></i>
+                            Гарантія
+                        </a>
+                    </li>
+                    <li>
+                        <a href="info.html#blog">
+                            <i class="fas fa-blog"></i>
+                            Блог
+                        </a>
+                    </li>
+                    <li>
+                        <a href="info.html#faq">
+                            <i class="fas fa-question-circle"></i>
+                            FAQ
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Колонка 3: Про компанію -->
+            <div class="footer-column">
+                <h3>
+                    <i class="fas fa-building"></i>
+                    Про компанію
+                </h3>
+                <ul class="footer-links">
+                    <li>
+                        <a href="info.html#about">
+                            <i class="fas fa-info-circle"></i>
+                            Про нас
+                        </a>
+                    </li>
+                    <li>
+                        <a href="info.html#contacts">
+                            <i class="fas fa-phone"></i>
+                            Контакти
+                        </a>
+                    </li>
+                    <li>
+                        <a href="info.html#franchise">
+                            <i class="fas fa-handshake"></i>
+                            Франшиза
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Колонка 4: Контакти -->
+            <div class="footer-column">
+                <h3>
+                    <i class="fas fa-address-book"></i>
+                    Контакти
+                </h3>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <span>099 949 3089</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>appleStore.mag.ua@gmail.com</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Пн-Нд: 9:00 - 21:00</span>
+                    </div>
+                </div>
+                <div class="footer-social">
+                    <a href="#" class="footer-social-link">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="footer-social-link">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="footer-social-link">
+                        <i class="fab fa-telegram"></i>
+                    </a>
+                    <a href="#" class="footer-social-link">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>
+                <i class="far fa-copyright"></i>
+                2024 iMarket Sell. Офіційний партнер Apple в Україні. Всі права захищені.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // ========== СИСТЕМА ЧАТУ ПІДТРИМКИ ==========
+        let currentUser = null;
+        let chatInterval = null;
+
+        // Ініціалізація користувача
+        function initializeUser() {
+            // Перевіряємо, чи є вже користувач
+            const storedUser = localStorage.getItem('currentSupportUser');
+            if (storedUser) {
+                currentUser = JSON.parse(storedUser);
+            } else {
+                // Створюємо нового користувача
+                currentUser = {
+                    id: 'user_' + Date.now(),
+                    name: 'Користувач',
+                    type: 'user',
+                    createdAt: new Date().toISOString()
+                };
+                localStorage.setItem('currentSupportUser', JSON.stringify(currentUser));
+            }
+            
+            // Ініціалізуємо чат
+            initializeChat();
+        }
+
+        // Ініціалізація чату
+        function initializeChat() {
+            loadChatMessages();
+            startChatPolling();
+            
+            // Додаємо привітальне повідомлення, якщо чат порожній
+            const allMessages = getAllMessages();
+            if (allMessages.length === 0) {
+                addSystemMessage('Вітаємо в службі підтримки iMarket Sell! Чим можемо вам допомогти?');
+                addSystemMessage('Наші фахівці завжди готові відповісти на ваші запитання щодо товарів, замовлень чи технічної підтримки.');
+            }
+        }
+
+        // Отримати всі повідомлення
+        function getAllMessages() {
+            return JSON.parse(localStorage.getItem('supportMessages')) || [];
+        }
+
+        // Отримати повідомлення для поточного користувача
+        function getUserMessages() {
+            const allMessages = getAllMessages();
+            return allMessages.filter(msg => msg.userId === currentUser.id);
+        }
+
+        // Зберегти повідомлення
+        function saveMessage(message) {
+            const allMessages = getAllMessages();
+            allMessages.push(message);
+            localStorage.setItem('supportMessages', JSON.stringify(allMessages));
+            
+            // Синхронізуємо з адміном
+            broadcastMessageUpdate();
+        }
+
+        // Завантажити повідомлення чату
+        function loadChatMessages() {
+            const chatMessages = document.getElementById('chat-messages');
+            const userMessages = getUserMessages();
+            
+            chatMessages.innerHTML = '';
+            
+            userMessages.forEach(msg => {
+                addMessageToChat(msg.text, msg.type, msg.timestamp, false);
+            });
+            
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Додати системне повідомлення
+        function addSystemMessage(text) {
+            const message = {
+                id: 'msg_' + Date.now(),
+                userId: currentUser.id,
+                text: text,
+                type: 'agent',
+                timestamp: new Date().toISOString()
+            };
+            saveMessage(message);
+            addMessageToChat(text, 'agent', message.timestamp, true);
+        }
+
+        // Додати повідомлення в чат
+        function addMessageToChat(text, sender, timestamp, animate = true) {
+            const chatMessages = document.getElementById('chat-messages');
+            const messageDiv = document.createElement('div');
+            
+            const messageTime = new Date(timestamp);
+            const timeString = messageTime.getHours().toString().padStart(2, '0') + ':' + 
+                             messageTime.getMinutes().toString().padStart(2, '0');
+            
+            messageDiv.className = `message ${sender}`;
+            if (animate) {
+                messageDiv.style.animation = 'fadeIn 0.3s ease-out';
+            }
+            
+            messageDiv.innerHTML = `
+                <div class="message-text">${text}</div>
+                <div class="message-time">${timeString}</div>
+            `;
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Відправити повідомлення
+        function sendMessage() {
+            const messageInput = document.getElementById('message-input');
+            const messageText = messageInput.value.trim();
+            
+            if (messageText === '') {
+                showNotification('Будь ласка, введіть повідомлення', 'error');
+                return;
+            }
+            
+            // Створюємо повідомлення
+            const message = {
+                id: 'msg_' + Date.now(),
+                userId: currentUser.id,
+                text: messageText,
+                type: 'user',
+                timestamp: new Date().toISOString()
+            };
+            
+            // Зберігаємо та відображаємо
+            saveMessage(message);
+            addMessageToChat(messageText, 'user', message.timestamp, true);
+            
+            // Очищаємо поле введення
+            messageInput.value = '';
+            messageInput.style.height = 'auto';
+            
+            // Показуємо сповіщення про відправку
+            showNotification('Повідомлення відправлено', 'success');
+        }
+
+        // Синхронізація з адміном
+        function broadcastMessageUpdate() {
+            // Використовуємо Broadcast Channel для сповіщення адміна
+            if (typeof BroadcastChannel !== 'undefined') {
+                const channel = new BroadcastChannel('support_messages');
+                channel.postMessage({
+                    type: 'messages_updated',
+                    timestamp: Date.now()
+                });
+            }
+            
+            // Також зберігаємо в localStorage для перехресної синхронізації
+            localStorage.setItem('supportLastUpdate', Date.now().toString());
+        }
+
+        // Отримання оновлень від адміна
+        function startChatPolling() {
+            // Перевіряємо оновлення кожні 2 секунди
+            chatInterval = setInterval(() => {
+                const lastUpdate = localStorage.getItem('supportLastUpdate');
+                const currentUpdate = localStorage.getItem('currentSupportUpdate');
+                
+                if (lastUpdate !== currentUpdate) {
+                    loadChatMessages();
+                    localStorage.setItem('currentSupportUpdate', lastUpdate);
+                }
+            }, 2000);
+        }
+
+        // ========== ФУНКЦІОНАЛ FAQ ==========
+        function toggleFAQ(element) {
+            element.classList.toggle('active');
+        }
+
+        // ========== ФУНКЦІЯ СПОВІЩЕНЬ ==========
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'error' ? 'exclamation-triangle' : 'check-circle'}"></i>
+                ${message}
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // ========== ІНШІ ФУНКЦІЇ ==========
+        function openCart() {
+            showNotification('Кошик відкрито', 'info');
+        }
+
+        function openWishlist() {
+            showNotification('Список бажань відкрито', 'info');
+        }
+
+        // Автоматичне збільшення висоти текстового поля
+        document.getElementById('message-input').addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+
+        // Відправка повідомлення по Enter (без Shift)
+        document.getElementById('message-input').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        // Ініціалізація при завантаженні сторінки
+        document.addEventListener('DOMContentLoaded', function() {
+            // Ініціалізуємо користувача та чат
+            initializeUser();
+            
+            // Автофокус на полі введення повідомлення
+            document.getElementById('message-input').focus();
+        });
+
+        // Припиняємо опитування при закритті сторінки
+        window.addEventListener('beforeunload', function() {
+            if (chatInterval) {
+                clearInterval(chatInterval);
+            }
+        });
+    </script>
+</body>
+</html>

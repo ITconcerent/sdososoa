@@ -1,0 +1,2309 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Деталі товару - iMarket Sell</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="cart.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f7;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ========== ГАМБУРГЕР-МЕНЮ ========== */
+        .hamburger-menu {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1002;
+            cursor: pointer;
+        }
+
+        .hamburger-btn {
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 0, 0, 0.9);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .hamburger-btn:hover {
+            background: rgba(0, 0, 0, 0.95);
+            transform: scale(1.05);
+        }
+
+        .hamburger-line {
+            width: 20px;
+            height: 2px;
+            background: white;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .hamburger-btn.active .hamburger-line:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+
+        .hamburger-btn.active .hamburger-line:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger-btn.active .hamburger-line:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
+
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 300px;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 1001;
+            transition: left 0.3s ease;
+            padding: 80px 0 30px 0;
+            overflow-y: auto;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .mobile-menu.active {
+            left: 0;
+        }
+
+        .menu-header {
+            padding: 0 25px 20px 25px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .menu-header .logo {
+            font-size: 24px;
+            color: white;
+        }
+
+        .menu-header .logo span {
+            color: #007aff;
+        }
+
+        .menu-items {
+            list-style: none;
+            padding: 0 15px;
+        }
+
+        .menu-item {
+            margin-bottom: 5px;
+        }
+
+        .menu-item a {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 20px;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .menu-item a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .menu-item i {
+            width: 20px;
+            text-align: center;
+            font-size: 18px;
+            color: #007aff;
+        }
+
+        .menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 15px 20px;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 18px;
+        }
+
+        .social-link:hover {
+            background: #007aff;
+            transform: translateY(-2px);
+        }
+
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* ========== СУЧАСНИЙ ФУТЕР ========== */
+        .modern-footer {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: white;
+            padding: 60px 0 30px 0;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+        }
+
+        .footer-column h3 {
+            color: #007aff;
+            font-size: 18px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-column h3 i {
+            font-size: 20px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: #b0b0b0;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+
+        .footer-links a:hover {
+            color: #007aff;
+            transform: translateX(5px);
+        }
+
+        .footer-links a i {
+            width: 16px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .footer-links a:hover i {
+            color: #007aff;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #b0b0b0;
+            font-size: 14px;
+        }
+
+        .contact-item i {
+            width: 20px;
+            text-align: center;
+            color: #007aff;
+            font-size: 16px;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .footer-social-link {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 18px;
+        }
+
+        .footer-social-link:hover {
+            background: #007aff;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 122, 255, 0.4);
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px 0 20px;
+            border-top: 1px solid #333;
+            margin-top: 50px;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .footer-bottom p {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        /* Адаптивність футера */
+        @media (max-width: 1024px) {
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+                text-align: center;
+            }
+
+            .footer-column h3 {
+                justify-content: center;
+            }
+
+            .footer-links a {
+                justify-content: center;
+            }
+
+            .contact-info {
+                align-items: center;
+            }
+
+            .footer-social {
+                justify-content: center;
+            }
+        }
+
+        /* ========== СЕКЦІЯ "ПРО НАС" ========== */
+        .about-section {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        .about-container {
+            background: white;
+            border-radius: 15px;
+            padding: 50px 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .about-title {
+            text-align: center;
+            font-size: 32px;
+            margin-bottom: 40px;
+            color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .about-content {
+            line-height: 1.7;
+            color: #333;
+        }
+
+        .about-intro {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: #007aff;
+            text-align: center;
+        }
+
+        .about-text p {
+            margin-bottom: 20px;
+            font-size: 16px;
+            text-align: justify;
+        }
+
+        .about-text strong {
+            color: #000;
+            font-weight: 600;
+        }
+
+        .about-features {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 12px;
+            margin: 30px 0;
+            border-left: 4px solid #007aff;
+        }
+
+        .about-features h3 {
+            color: #000;
+            margin-bottom: 20px;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background: #007aff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .feature-content h4 {
+            color: #000;
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+
+        .feature-content p {
+            color: #666;
+            font-size: 14px;
+            margin: 0;
+            text-align: left;
+        }
+
+        .about-mission {
+            background: linear-gradient(135deg, #007aff, #0056cc);
+            color: white;
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .about-mission h3 {
+            margin-bottom: 15px;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .about-mission p {
+            font-size: 16px;
+            opacity: 0.95;
+            margin: 0;
+        }
+
+        /* ========== НОВІ БЛОКИ FAQ ТА ПИТАНЬ ========== */
+        .faq-section {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        .faq-title {
+            text-align: center;
+            font-size: 32px;
+            margin-bottom: 40px;
+            color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .faq-container {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .faq-item {
+            border-bottom: 1px solid #e1e1e1;
+            margin-bottom: 15px;
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .faq-question {
+            padding: 20px 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 18px;
+            font-weight: 600;
+            color: #000;
+            transition: all 0.3s ease;
+        }
+
+        .faq-question:hover {
+            color: #007aff;
+        }
+
+        .faq-question i {
+            font-size: 20px;
+            margin-right: 15px;
+            color: #007aff;
+        }
+
+        .faq-answer {
+            padding: 0 0 20px 0;
+            color: #666;
+            line-height: 1.6;
+            display: none;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .faq-answer.active {
+            display: block;
+        }
+
+        .faq-toggle {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: #007aff;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .faq-toggle:hover {
+            background: #f0f0f0;
+        }
+
+        .faq-toggle.rotated {
+            transform: rotate(45deg);
+        }
+
+        .questions-section {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        .questions-container {
+            background: white;
+            border-radius: 15px;
+            padding: 50px 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .questions-title {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .questions-subtitle {
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 40px;
+            line-height: 1.5;
+        }
+
+        .questions-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .question-btn {
+            background: #007aff;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(0, 122, 255, 0.2);
+            text-decoration: none;
+        }
+
+        .question-btn:hover {
+            background: #0056cc;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 122, 255, 0.3);
+        }
+
+        .question-btn.secondary {
+            background: #34c759;
+            box-shadow: 0 4px 15px rgba(52, 199, 89, 0.2);
+        }
+
+        .question-btn.secondary:hover {
+            background: #2daa4c;
+            box-shadow: 0 6px 20px rgba(52, 199, 89, 0.3);
+        }
+
+        /* Шапка */
+        header {
+            background: #000;
+            color: white;
+            padding: 15px 0;
+            border-bottom: 1px solid #333;
+            position: relative;
+            z-index: 1001;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .logo span {
+            color: #007aff;
+        }
+
+        .user-actions a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 14px;
+        }
+
+        .user-actions a:hover {
+            color: #007aff;
+        }
+
+        /* Контейнер товару */
+        .product-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            flex: 1;
+        }
+
+        .back-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-btn:hover {
+            background: #545b62;
+            transform: translateX(-5px);
+        }
+
+        .product-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        /* Галерея фото */
+        .product-gallery {
+            position: relative;
+        }
+
+        .main-image {
+            width: 100%;
+            height: 400px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .main-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: transform 0.3s;
+        }
+
+        .main-image:hover img {
+            transform: scale(1.05);
+        }
+
+        .image-counter {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .thumbnail-gallery {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 10px 0;
+        }
+
+        .thumbnail {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+            flex-shrink: 0;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .thumbnail.active {
+            border-color: #007aff;
+        }
+
+        .thumbnail:hover {
+            border-color: #007aff;
+            transform: scale(1.1);
+        }
+
+        .gallery-nav {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 10px;
+            transform: translateY(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .product-gallery:hover .gallery-nav {
+            opacity: 1;
+        }
+
+        .nav-btn {
+            background: rgba(0,0,0,0.7);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: rgba(0,0,0,0.9);
+            transform: scale(1.1);
+        }
+
+        .nav-btn:disabled {
+            background: rgba(0,0,0,0.3);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .product-info h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            color: #000;
+        }
+
+        .product-model {
+            background: #007aff;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .product-price {
+            font-size: 28px;
+            color: #e53935;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .product-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .product-specs {
+            margin-bottom: 30px;
+        }
+
+        .product-specs h3 {
+            margin-bottom: 15px;
+            color: #333;
+            border-bottom: 2px solid #007aff;
+            padding-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Красиве відображення характеристик */
+        .specs-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .spec-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+            background: #f8f9fa;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .spec-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .spec-label {
+            color: #333;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .spec-label i {
+            color: #007aff;
+            font-size: 14px;
+        }
+
+        .spec-value {
+            color: #666;
+            text-align: right;
+            max-width: 200px;
+        }
+
+        .product-meta {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .meta-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid #e1e1e1;
+        }
+
+        .meta-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .meta-label {
+            color: #666;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .meta-value {
+            color: #333;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .buy-btn {
+            background: #007aff;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            flex: 1;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .buy-btn:hover {
+            background: #0056cc;
+            transform: translateY(-2px);
+        }
+
+        /* СТИЛІ ДЛЯ КНОПКИ "В ОБРАНЕ" */
+        .wishlist-btn {
+            background: #f8f9fa;
+            color: #666;
+            border: 2px solid #e1e1e1;
+            padding: 15px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 60px;
+            height: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .wishlist-btn:hover {
+            border-color: #ff4081;
+            transform: translateY(-2px);
+        }
+
+        .wishlist-btn.active {
+            background: #ff4081;
+            border-color: #ff4081;
+            color: white;
+        }
+
+        .wishlist-btn .heart-icon {
+            font-size: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .wishlist-btn:not(.active) .heart-icon {
+            color: #666;
+        }
+
+        .wishlist-btn.active .heart-icon {
+            color: white;
+            animation: heartBeat 0.6s ease;
+        }
+
+        @keyframes heartBeat {
+            0% { transform: scale(1); }
+            25% { transform: scale(1.3); }
+            50% { transform: scale(0.9); }
+            75% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        /* Модальне вікно для фото */
+        .modal-gallery {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .modal-gallery.active {
+            display: flex;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 80%;
+            position: relative;
+            text-align: center;
+        }
+
+        .modal-content img {
+            max-width: 100%;
+            max-height: 70vh;
+            object-fit: contain;
+            border-radius: 10px;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .modal-close:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
+        }
+
+        .modal-nav {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+            transform: translateY(-50%);
+        }
+
+        .modal-thumbnails {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            padding: 10px;
+            overflow-x: auto;
+            max-width: 90%;
+        }
+
+        .modal-thumbnail {
+            width: 60px;
+            height: 60px;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .modal-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .modal-thumbnail.active {
+            border-color: #007aff;
+        }
+
+        .modal-thumbnail:hover {
+            border-color: #007aff;
+        }
+
+        .image-counter-modal {
+            color: white;
+            font-size: 16px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        /* Адаптивність */
+        @media (max-width: 768px) {
+            .product-details {
+                grid-template-columns: 1fr;
+                gap: 30px;
+                padding: 20px;
+            }
+
+            .main-image {
+                height: 300px;
+            }
+
+            .product-info h1 {
+                font-size: 24px;
+            }
+
+            .product-actions {
+                flex-direction: column;
+            }
+
+            .thumbnail {
+                width: 60px;
+                height: 60px;
+            }
+
+            .gallery-nav {
+                opacity: 1;
+            }
+
+            .modal-thumbnail {
+                width: 50px;
+                height: 50px;
+            }
+
+            .hamburger-menu {
+                top: 15px;
+                left: 15px;
+            }
+
+            .hamburger-btn {
+                width: 35px;
+                height: 35px;
+            }
+
+            .mobile-menu {
+                width: 280px;
+            }
+
+            .faq-container,
+            .questions-container {
+                padding: 30px 20px;
+            }
+
+            .faq-question {
+                font-size: 16px;
+                padding: 15px 0;
+            }
+
+            .questions-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .question-btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+
+            /* Адаптивність для секції "Про нас" */
+            .about-container {
+                padding: 30px 20px;
+            }
+
+            .about-title {
+                font-size: 24px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .about-features {
+                padding: 20px;
+            }
+
+            .about-mission {
+                padding: 30px 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .mobile-menu {
+                width: 100%;
+            }
+            
+            .hamburger-menu {
+                top: 10px;
+                left: 10px;
+            }
+
+            .faq-title,
+            .questions-title {
+                font-size: 24px;
+            }
+
+            .questions-subtitle {
+                font-size: 16px;
+            }
+
+            .about-title {
+                font-size: 20px;
+            }
+        }
+
+        /* Анімації */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .product-details {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes zoomIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .modal-content img {
+            animation: zoomIn 0.3s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Гамбургер-меню -->
+    <div class="hamburger-menu">
+        <div class="hamburger-btn" id="hamburger-btn">
+            <div class="hamburger-line"></div>
+            <div class="hamburger-line"></div>
+            <div class="hamburger-line"></div>
+        </div>
+    </div>
+
+    <!-- Бокове меню -->
+    <div class="mobile-menu" id="mobile-menu">
+        <div class="menu-header">
+            <div class="logo">iMarket <span>Sell</span></div>
+        </div>
+        
+        <ul class="menu-items">
+            <li class="menu-item">
+                <a href="index.html">
+                    <i class="fas fa-home"></i>
+                    Головна
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="index.html#iphone-content">
+                    <i class="fas fa-mobile-alt"></i>
+                    iPhone
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="index.html#ipad-content">
+                    <i class="fas fa-tablet-alt"></i>
+                    iPad
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="index.html#macbook-content">
+                    <i class="fas fa-laptop"></i>
+                    MacBook
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="index.html#apple-watch-content">
+                    <i class="fas fa-clock"></i>
+                    Apple Watch
+                </a>
+            </li>
+            
+            <div class="menu-divider"></div>
+            
+            <li class="menu-item">
+                <a href="info.html#about">
+                    <i class="fas fa-info-circle"></i>
+                    Про нас
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="info.html#contacts">
+                    <i class="fas fa-phone"></i>
+                    Контакти
+                </a>
+            </li>
+            
+            <div class="menu-divider"></div>
+            
+            <li class="menu-item">
+                <a href="#">
+                    <i class="fab fa-facebook"></i>
+                    Facebook
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="#">
+                    <i class="fab fa-instagram"></i>
+                    Instagram
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="#">
+                    <i class="fab fa-telegram"></i>
+                    Telegram
+                </a>
+            </li>
+            
+            <div class="menu-divider"></div>
+            
+            <li class="menu-item">
+                <a href="info.html#faq">
+                    <i class="fas fa-question-circle"></i>
+                    Допомога
+                </a>
+            </li>
+        </ul>
+
+        <div class="social-links">
+            <a href="#" class="social-link">
+                <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="#" class="social-link">
+                <i class="fab fa-instagram"></i>
+            </a>
+            <a href="#" class="social-link">
+                <i class="fab fa-telegram"></i>
+            </a>
+            <a href="#" class="social-link">
+                <i class="fab fa-youtube"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- Оверлей для закриття меню -->
+    <div class="menu-overlay" id="menu-overlay"></div>
+
+    <!-- Шапка -->
+    <header>
+        <div class="header-top">
+            <div class="logo">iMarket <span>Sell</span></div>
+            <div class="user-actions">
+                <a href="index.html">На головну</a>
+                <a href="javascript:void(0)" onclick="openCart()">Кошик (<span class="cart-count">0</span>)</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Контейнер товару -->
+    <div class="product-container">
+        <button class="back-btn" onclick="goBack()">
+            ← Повернутись до каталогу
+        </button>
+
+        <div class="product-details" id="product-details">
+            <!-- Дані товару будуть завантажені через JavaScript -->
+        </div>
+    </div>
+
+    <!-- Секція "Про нас" -->
+    <section class="about-section">
+        <div class="about-container">
+            <h2 class="about-title">
+                <i class="fas fa-store"></i>
+                Про нас
+            </h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p class="about-intro">Ласкаво просимо до <strong>iMarket Sell</strong> – вашого надійного інтернет-магазину бу техніки Apple!</p>
+                    
+                    <p>Уже понад <strong>2 роки</strong> ми успішно працюємо на ринку, допомагаючи нашим клієнтам знаходити iPhone, iPad, MacBook та Apple Watche у відмінному стані за вигідними цінами.</p>
+
+                    <p>У нашому магазині ви знайдете широкий асортимент техніки Apple, який задовольнить потреби навіть найвибагливіших користувачів. Кожен iPhone та iPad проходить ретельну перевірку, щоб ви отримали лише справні та оригінальні пристрої. Наші MacBook та Apple Watch теж перевіряються на повну працездатність, щоб гарантувати їхню якість та довговічність.</p>
+
+                    <div class="about-features">
+                        <h3>
+                            <i class="fas fa-star"></i>
+                            Що відрізняє iMarket Sell від інших магазинів?
+                        </h3>
+                        <div class="features-grid">
+                            <div class="feature-item">
+                                <div class="feature-icon">
+                                    <i class="fas fa-shield-alt"></i>
+                                </div>
+                                <div class="feature-content">
+                                    <h4>Гарантія оригінальності</h4>
+                                    <p>Ми продаємо тільки перевірену техніку Apple</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-icon">
+                                    <i class="fas fa-gift"></i>
+                                </div>
+                                <div class="feature-content">
+                                    <h4>Бонуси та акції</h4>
+                                    <p>Для постійних клієнтів - вигідні пропозиції та знижки</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-icon">
+                                    <i class="fas fa-shipping-fast"></i>
+                                </div>
+                                <div class="feature-content">
+                                    <h4>Швидка доставка</h4>
+                                    <p>Ми цінуємо ваш час, тому відправляємо замовлення максимально швидко</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-icon">
+                                    <i class="fas fa-headset"></i>
+                                </div>
+                                <div class="feature-content">
+                                    <h4>Професійна підтримка</h4>
+                                    <p>Наші менеджери завжди готові допомогти з будь-якими питаннями</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="about-mission">
+                        <h3>
+                            <i class="fas fa-bullseye"></i>
+                            Наша місія
+                        </h3>
+                        <p>Зробити процес покупки простим, зручним та безпечним. Ми прагнемо, щоб кожен клієнт залишався задоволеним і повертався до нас знову. Для нас важливі довіра, прозорість та турбота про клієнта, адже це головний критерій нашого успіху.</p>
+                    </div>
+
+                    <p><strong>Обираючи iMarket Sell</strong>, ви отримуєте якісну, надійну та перевірену техніку Apple, вигідні умови покупки та уважне ставлення до кожного клієнта. Ваш комфорт і задоволення – наш пріоритет, а кожен товар у нашому магазині підбирається з любов'ю та увагою до деталей.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Блок FAQ -->
+    <section class="faq-section">
+        <h2 class="faq-title">
+            <i class="fas fa-question-circle"></i>
+            FAQ — Часті питання
+        </h2>
+        <div class="faq-container">
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(0)">
+                    <span>
+                        <i class="fas fa-question"></i>
+                        Як оформити замовлення?
+                    </span>
+                    <button class="faq-toggle">+</button>
+                </div>
+                <div class="faq-answer">
+                    <p>Оформити замовлення дуже просто! Додайте товари в кошик, перейдіть до оформлення, заповніть свої контактні дані та оберіть зручний спосіб доставки. Після підтвердження замовлення наш менеджер зв'яжеться з вами для уточнення деталей.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(1)">
+                    <span>
+                        <i class="fas fa-truck"></i>
+                        Коли прийде доставка?
+                    </span>
+                    <button class="faq-toggle">+</button>
+                </div>
+                <div class="faq-answer">
+                    <p>Терміни доставки залежать від вашого місцезнаходження та обраного способу доставки:</p>
+                    <ul style="margin-top: 10px; padding-left: 20px;">
+                        <li>Київ - 1-2 дні</li>
+                        <li>Обласні центри - 2-3 дні</li>
+                        <li>Інші населені пункти - 3-5 днів</li>
+                    </ul>
+                    <p style="margin-top: 10px;">Точний термін вам повідомить менеджер при підтвердженні замовлення.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(2)">
+                    <span>
+                        <i class="fas fa-credit-card"></i>
+                        Які способи оплати доступні?
+                    </span>
+                    <button class="faq-toggle">+</button>
+                </div>
+                <div class="faq-answer">
+                    <p>Ми пропонуємо кілька зручних та безпечних способів оплати:</p>
+                    <ul style="margin-top: 10px; padding-left: 20px;">
+                        <li><strong>Apple Pay</strong> - швидка оплата через ваш iPhone або Apple Watch</li>
+                        <li><strong>Google Pay</strong> - зручна оплата для власників Android-пристроїв</li>
+                        <li><strong>Банківська картка</strong> (Visa, MasterCard) - безпечна онлайн-оплата</li>
+                    </ul>
+                    <p style="margin-top: 15px; background: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid #34c759;">
+                        <strong>💳 Безпека оплати:</strong> Всі платежі проходять через сертифіковані платіжні системи. 
+                        Дані вашої картки шифруються та не передаються продавцю, що гарантує повну конфіденційність.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Блок "Залишились питання?" -->
+    <section class="questions-section">
+        <div class="questions-container">
+            <h2 class="questions-title">
+                <i class="fas fa-comments"></i>
+                Залишились питання?
+            </h2>
+            <p class="questions-subtitle">
+                Якщо у вас залишились питання — ми завжди на зв'язку!
+            </p>
+            <div class="questions-buttons">
+                <a href="support.html" class="question-btn">
+                    <i class="fas fa-headset"></i>
+                    Задати питання консультанту
+                </a>
+                <button class="question-btn secondary" onclick="openTelegram()">
+                    <i class="fab fa-telegram"></i>
+                    Написати в Telegram
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- СУЧАСНИЙ ФУТЕР -->
+    <footer class="modern-footer">
+        <div class="footer-content">
+            <!-- Колонка 1: Категорії -->
+            <div class="footer-column">
+                <h3>
+                    <i class="fas fa-th-large"></i>
+                    Категорії
+                </h3>
+                <ul class="footer-links">
+                    <li>
+                        <a href="index.html#iphone-content">
+                            <i class="fas fa-mobile-alt"></i>
+                            iPhone
+                        </a>
+                    </li>
+                    <li>
+                        <a href="index.html#ipad-content">
+                            <i class="fas fa-tablet-alt"></i>
+                            iPad
+                        </a>
+                    </li>
+                    <li>
+                        <a href="index.html#macbook-content">
+                            <i class="fas fa-laptop"></i>
+                            MacBook
+                        </a>
+                    </li>
+                    <li>
+                        <a href="index.html#apple-watch-content">
+                            <i class="fas fa-clock"></i>
+                            Apple Watch
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-headphones"></i>
+                            AirPods
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Колонка 2: Для покупця -->
+            <div class="footer-column">
+                <h3>
+                    <i class="fas fa-shopping-bag"></i>
+                    Для покупця
+                </h3>
+                <ul class="footer-links">
+                    <li>
+                        <a href="info.html#delivery">
+                            <i class="fas fa-truck"></i>
+                            Доставка і оплата
+                        </a>
+                    </li>
+                    <li>
+                        <a href="info.html#warranty">
+                            <i class="fas fa-shield-alt"></i>
+                            Гарантія
+                        </a>
+                    </li>
+                    <li>
+                        <a href="info.html#blog">
+                            <i class="fas fa-blog"></i>
+                            Блог
+                        </a>
+                    </li>
+                    <li>
+                        <a href="info.html#faq">
+                            <i class="fas fa-question-circle"></i>
+                            FAQ
+                        </a>
+                    </li>
+                    <li>
+                        <a href="info.html#return">
+                            <i class="fas fa-exchange-alt"></i>
+                            Повернення
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Колонка 3: Про компанію -->
+            <div class="footer-column">
+                <h3>
+                    <i class="fas fa-building"></i>
+                    Про компанію
+                </h3>
+                <ul class="footer-links">
+                    <li>
+                        <a href="info.html#about">
+                            <i class="fas fa-info-circle"></i>
+                            Про нас
+                        </a>
+                    </li>
+                    <li>
+                        <a href="info.html#contacts">
+                            <i class="fas fa-phone"></i>
+                            Контакти
+                        </a>
+                    </li>
+                    <li>
+                        <a href="info.html#franchise">
+                            <i class="fas fa-handshake"></i>
+                            Франшиза
+                        </a>
+                    </li>
+                    <li>
+                        <a href="info.html#media">
+                            <i class="fas fa-newspaper"></i>
+                            СМІ про нас
+                        </a>
+                    </li>
+                    <li>
+                        <a href="info.html#career">
+                            <i class="fas fa-briefcase"></i>
+                            Кар'єра
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Колонка 4: Контакти -->
+            <div class="footer-column">
+                <h3>
+                    <i class="fas fa-address-book"></i>
+                    Контакти
+                </h3>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <span>099 949 3089</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>appleStore.mag.ua@gmail.com</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Пн-Нд: 9:00 - 21:00</span>
+                    </div>
+                </div>
+                <div class="footer-social">
+                    <a href="#" class="footer-social-link">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="footer-social-link">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="footer-social-link">
+                        <i class="fab fa-telegram"></i>
+                    </a>
+                    <a href="#" class="footer-social-link">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>
+                <i class="far fa-copyright"></i>
+                2024 iMarket Sell. Офіційний партнер Apple в Україні. Всі права захищені.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Модальне вікно галереї -->
+    <div class="modal-gallery" id="modal-gallery">
+        <div class="image-counter-modal" id="modal-image-counter">Фото 1 з 1</div>
+        <div class="modal-content">
+            <img id="modal-image" src="" alt="">
+            <button class="modal-close" onclick="closeModal()">×</button>
+            <div class="modal-nav">
+                <button class="nav-btn" id="prev-btn" onclick="navigateModalGallery(-1)">←</button>
+                <button class="nav-btn" id="next-btn" onclick="navigateModalGallery(1)">→</button>
+            </div>
+        </div>
+        <div class="modal-thumbnails" id="modal-thumbnails">
+            <!-- Мініатюри для модального вікна -->
+        </div>
+    </div>
+
+    <!-- Підключаємо JavaScript -->
+    <script src="products.js"></script>
+    <script src="cart.js"></script>
+    <script>
+        // ========== ФУНКЦІОНАЛ ОБРАНОГО ==========
+        let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+
+        // Функція для додавання/видалення з обраного
+        function toggleWishlist(productId, category) {
+            const product = getProductById(productId, category);
+            if (!product) return;
+
+            const existingIndex = wishlist.findIndex(item => 
+                item.id === productId && item.category === category
+            );
+
+            if (existingIndex > -1) {
+                // Видаляємо з обраного
+                wishlist.splice(existingIndex, 1);
+                showNotification('💔 Товар видалено з обраного', 'wishlist');
+            } else {
+                // Додаємо в обране
+                const wishlistItem = {
+                    id: product.id,
+                    category: category,
+                    name: product.name,
+                    price: product.price,
+                    image: product.mainImage || product.image,
+                    model: product.model,
+                    specs: product.specs,
+                    addedAt: new Date().toISOString()
+                };
+                wishlist.push(wishlistItem);
+                showNotification('❤️ Товар додано в обране!', 'wishlist');
+            }
+
+            // Зберігаємо в LocalStorage
+            localStorage.setItem('wishlist', JSON.stringify(wishlist));
+            
+            // Оновлюємо стан кнопки
+            updateWishlistButton(productId, category, existingIndex === -1);
+        }
+
+        // Функція для перевірки чи товар вже в обраному
+        function isInWishlist(productId, category) {
+            return wishlist.some(item => item.id === productId && item.category === category);
+        }
+
+        // Функція для оновлення вигляду кнопки
+        function updateWishlistButton(productId, category, isActive) {
+            const wishlistBtn = document.querySelector('.wishlist-btn');
+            if (wishlistBtn) {
+                if (isActive) {
+                    wishlistBtn.classList.add('active');
+                    wishlistBtn.innerHTML = '<i class="fas fa-heart heart-icon"></i>';
+                } else {
+                    wishlistBtn.classList.remove('active');
+                    wishlistBtn.innerHTML = '<i class="far fa-heart heart-icon"></i>';
+                }
+            }
+        }
+
+        // Функції для гамбургер-меню
+        function toggleMobileMenu() {
+            const hamburgerBtn = document.getElementById('hamburger-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const menuOverlay = document.getElementById('menu-overlay');
+            
+            hamburgerBtn.classList.toggle('active');
+            mobileMenu.classList.toggle('active');
+            menuOverlay.classList.toggle('active');
+            
+            document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+        }
+
+        function closeMobileMenu() {
+            const hamburgerBtn = document.getElementById('hamburger-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const menuOverlay = document.getElementById('menu-overlay');
+            
+            hamburgerBtn.classList.remove('active');
+            mobileMenu.classList.remove('active');
+            menuOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Функції для FAQ акордеона
+        function toggleFAQ(index) {
+            const answers = document.querySelectorAll('.faq-answer');
+            const toggles = document.querySelectorAll('.faq-toggle');
+            const answer = answers[index];
+            const toggle = toggles[index];
+            
+            // Закриваємо всі інші відповіді
+            answers.forEach((ans, i) => {
+                if (i !== index) {
+                    ans.classList.remove('active');
+                    toggles[i].classList.remove('rotated');
+                }
+            });
+            
+            // Перемикаємо поточну відповідь
+            answer.classList.toggle('active');
+            toggle.classList.toggle('rotated');
+        }
+
+        // Функції для кнопок "Залишились питання?"
+        function contactConsultant() {
+            showNotification('👋 Консультант зв\'яжеться з вами найближчим часом!', 'success');
+        }
+
+        function openTelegram() {
+            window.open('https://t.me/istore_ua', '_blank');
+            showNotification('📱 Переходимо в Telegram...', 'info');
+        }
+
+        function requestCallback() {
+            showNotification('📞 Ми передзвонимо вам протягом 15 хвилин!', 'success');
+        }
+
+        // Ініціалізація меню
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburgerBtn = document.getElementById('hamburger-btn');
+            const menuOverlay = document.getElementById('menu-overlay');
+            const menuLinks = document.querySelectorAll('.mobile-menu a');
+            
+            if (hamburgerBtn) {
+                hamburgerBtn.addEventListener('click', toggleMobileMenu);
+            }
+            if (menuOverlay) {
+                menuOverlay.addEventListener('click', closeMobileMenu);
+            }
+            
+            menuLinks.forEach(link => {
+                link.addEventListener('click', closeMobileMenu);
+            });
+            
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeMobileMenu();
+                }
+            });
+        });
+
+        // Глобальні змінні для галереї
+        let currentProduct = null;
+        let currentImageIndex = 0;
+        let productImages = [];
+
+        // Завантаження даних товару
+        function loadProductDetails() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = parseInt(urlParams.get('id'));
+            const category = urlParams.get('category');
+            
+            if (!productId || !category) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Знаходимо товар в базі даних
+            currentProduct = getProductById(productId, category);
+            
+            if (!currentProduct) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Відображаємо дані товару
+            displayProductDetails(currentProduct, category);
+        }
+
+        function displayProductDetails(product, category) {
+            const productDetails = document.getElementById('product-details');
+            
+            // Підготовка фото для галереї
+            productImages = product.images || [];
+            if (product.mainImage && !productImages.includes(product.mainImage)) {
+                productImages.unshift(product.mainImage);
+            }
+            if (product.image && !productImages.includes(product.image)) {
+                productImages.unshift(product.image);
+            }
+            if (productImages.length === 0) {
+                productImages.push('https://via.placeholder.com/600x600/007AFF/FFFFFF?text=No+Image');
+            }
+
+            // Перевіряємо чи товар вже в обраному
+            const isWishlisted = isInWishlist(product.id, category);
+
+            // Красиве форматування характеристик
+            const characteristicsHTML = Object.entries(product.characteristics || {})
+                .map(([key, value]) => {
+                    const icon = getCharacteristicIcon(key);
+                    return `
+                        <div class="spec-item">
+                            <div class="spec-label">
+                                <i class="${icon}"></i>
+                                ${getCharacteristicLabel(key)}
+                            </div>
+                            <div class="spec-value">${value}</div>
+                        </div>
+                    `;
+                }).join('');
+
+            productDetails.innerHTML = `
+                <div class="product-gallery">
+                    <div class="main-image" onclick="openModal(0)">
+                        <img src="${productImages[0]}" alt="${product.name}" id="main-product-image">
+                        ${productImages.length > 1 ? `
+                            <div class="image-counter">
+                                ${productImages.length} фото
+                            </div>
+                        ` : ''}
+                    </div>
+                    
+                    ${productImages.length > 1 ? `
+                        <div class="thumbnail-gallery">
+                            ${productImages.map((image, index) => `
+                                <div class="thumbnail ${index === 0 ? 'active' : ''}" onclick="changeMainImage(${index})">
+                                    <img src="${image}" alt="${product.name} - фото ${index + 1}">
+                                </div>
+                            `).join('')}
+                        </div>
+                        
+                        <div class="gallery-nav">
+                            <button class="nav-btn" id="prev-btn-main" onclick="navigateGallery(-1)" ${productImages.length <= 1 ? 'disabled' : ''}>
+                                ←
+                            </button>
+                            <button class="nav-btn" id="next-btn-main" onclick="navigateGallery(1)" ${productImages.length <= 1 ? 'disabled' : ''}>
+                                →
+                            </button>
+                        </div>
+                    ` : ''}
+                </div>
+                
+                <div class="product-info">
+                    <h1>${product.name}</h1>
+                    <div class="product-model">${product.model}</div>
+                    <div class="product-price">${product.price.toLocaleString('uk-UA')} ₴</div>
+                    
+                    <div class="product-description">
+                        ${product.description || 'Опис товару відсутній'}
+                    </div>
+
+                    ${characteristicsHTML ? `
+                    <div class="product-specs">
+                        <h3>📋 Характеристики</h3>
+                        <div class="specs-grid">
+                            ${characteristicsHTML}
+                        </div>
+                    </div>
+                    ` : ''}
+
+                    <div class="product-meta">
+                        <div class="meta-item">
+                            <span class="meta-label">📦 Код товару:</span>
+                            <span class="meta-value">${product.sku || 'Не вказано'}</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">🏭 Виробник:</span>
+                            <span class="meta-value">${product.manufacturer || 'Apple Inc.'}</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">📁 Категорія:</span>
+                            <span class="meta-value">${getCategoryName(category)}</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">📅 Додано:</span>
+                            <span class="meta-value">${formatDate(product.createdAt)}</span>
+                        </div>
+                    </div>
+
+                    <div class="product-actions">
+                        <button class="buy-btn" onclick="addToCartFromProductPage(${product.id}, '${category}')">
+                            🛒 Додати в кошик
+                        </button>
+                        <button class="wishlist-btn ${isWishlisted ? 'active' : ''}" onclick="toggleWishlist(${product.id}, '${category}')">
+                            <i class="${isWishlisted ? 'fas' : 'far'} fa-heart heart-icon"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Функції для галереї
+        function changeMainImage(index) {
+            const mainImage = document.getElementById('main-product-image');
+            const thumbnails = document.querySelectorAll('.thumbnail');
+            
+            mainImage.src = productImages[index];
+            currentImageIndex = index;
+            
+            // Оновлюємо активну мініатюру
+            thumbnails.forEach((thumb, i) => {
+                thumb.classList.toggle('active', i === index);
+            });
+        }
+
+        function navigateGallery(direction) {
+            let newIndex = currentImageIndex + direction;
+            
+            if (newIndex < 0) {
+                newIndex = productImages.length - 1;
+            } else if (newIndex >= productImages.length) {
+                newIndex = 0;
+            }
+            
+            changeMainImage(newIndex);
+        }
+
+        function openModal(index) {
+            if (productImages.length === 0) return;
+            
+            currentImageIndex = index;
+            const modal = document.getElementById('modal-gallery');
+            const modalImage = document.getElementById('modal-image');
+            const modalCounter = document.getElementById('modal-image-counter');
+            const modalThumbnails = document.getElementById('modal-thumbnails');
+            
+            modalImage.src = productImages[index];
+            modalCounter.textContent = `Фото ${index + 1} з ${productImages.length}`;
+            
+            // Оновлюємо мініатюри для модального вікна
+            modalThumbnails.innerHTML = '';
+            productImages.forEach((image, imgIndex) => {
+                const thumbnail = document.createElement('div');
+                thumbnail.className = `modal-thumbnail ${imgIndex === index ? 'active' : ''}`;
+                thumbnail.innerHTML = `<img src="${image}" alt="Фото ${imgIndex + 1}">`;
+                thumbnail.onclick = () => changeModalImage(imgIndex);
+                modalThumbnails.appendChild(thumbnail);
+            });
+            
+            // Оновлюємо стани кнопок навігації
+            updateModalNavigation();
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function changeModalImage(index) {
+            currentImageIndex = index;
+            const modalImage = document.getElementById('modal-image');
+            const modalCounter = document.getElementById('modal-image-counter');
+            const modalThumbnails = document.querySelectorAll('.modal-thumbnail');
+            
+            modalImage.src = productImages[index];
+            modalCounter.textContent = `Фото ${index + 1} з ${productImages.length}`;
+            
+            // Оновлюємо активну мініатюру
+            modalThumbnails.forEach((thumb, i) => {
+                thumb.classList.toggle('active', i === index);
+            });
+            
+            // Оновлюємо стани кнопок навігації
+            updateModalNavigation();
+        }
+
+        function navigateModalGallery(direction) {
+            let newIndex = currentImageIndex + direction;
+            
+            if (newIndex < 0) {
+                newIndex = productImages.length - 1;
+            } else if (newIndex >= productImages.length) {
+                newIndex = 0;
+            }
+            
+            changeModalImage(newIndex);
+        }
+
+        function updateModalNavigation() {
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            
+            // Для одного фото робимо кнопки неактивними
+            if (productImages.length <= 1) {
+                prevBtn.disabled = true;
+                nextBtn.disabled = true;
+            } else {
+                prevBtn.disabled = false;
+                nextBtn.disabled = false;
+            }
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('modal-gallery');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Допоміжні функції
+        function getCharacteristicLabel(key) {
+            const labels = {
+                'processor': 'Процесор',
+                'memory': 'Пам\'ять',
+                'color': 'Колір',
+                'screen': 'Дисплей',
+                'camera': 'Камера',
+                'battery': 'Батарея',
+                'weight': 'Вага',
+                'storage': 'Накопичувач',
+                'graphics': 'Графіка',
+                'material': 'Матеріал',
+                'waterResistance': 'Водостійкість',
+                'gps': 'GPS',
+                'connectivity': 'Зв\'язок',
+                'os': 'Операційна система',
+                'dimensions': 'Розміри'
+            };
+            return labels[key] || key;
+        }
+
+        function getCharacteristicIcon(key) {
+            const icons = {
+                'processor': 'fas fa-microchip',
+                'memory': 'fas fa-memory',
+                'color': 'fas fa-palette',
+                'screen': 'fas fa-desktop',
+                'camera': 'fas fa-camera',
+                'battery': 'fas fa-battery-full',
+                'weight': 'fas fa-weight-hanging',
+                'storage': 'fas fa-hdd',
+                'graphics': 'fas fa-gamepad',
+                'material': 'fas fa-cube',
+                'waterResistance': 'fas fa-tint',
+                'gps': 'fas fa-map-marker-alt',
+                'connectivity': 'fas fa-wifi',
+                'os': 'fas fa-code',
+                'dimensions': 'fas fa-ruler-combined'
+            };
+            return icons[key] || 'fas fa-info-circle';
+        }
+
+        function getCategoryName(category) {
+            const categories = {
+                'iphone': 'iPhone',
+                'ipad': 'iPad',
+                'macbook': 'MacBook',
+                'apple-watch': 'Apple Watch'
+            };
+            return categories[category] || category;
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return 'Не вказано';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('uk-UA');
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+
+        function addToCartFromProductPage(productId, category) {
+            const product = getProductById(productId, category);
+            if (product) {
+                addToCart(productId, category, event);
+                
+                // Анімація кнопки
+                const btn = event.target;
+                btn.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    btn.style.transform = '';
+                }, 150);
+                
+                // Сповіщення
+                showAddToCartNotification(product);
+            }
+        }
+
+        // Функція для показу сповіщень
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#4CAF50' : type === 'wishlist' ? '#ff4081' : '#007aff'};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                z-index: 1000;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+                animation: slideInRight 0.3s ease-out;
+                font-family: Arial, sans-serif;
+                font-size: 14px;
+            `;
+            notification.innerHTML = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 3000);
+        }
+
+        function showAddToCartNotification(product) {
+            showNotification(`
+                ✅ <strong>${product.name}</strong> додано до кошика!
+                <div style="font-size: 12px; margin-top: 5px;">Ціна: ${product.price.toLocaleString('uk-UA')} ₴</div>
+            `, 'success');
+        }
+
+        // Закриття модального вікна по ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+            
+            // Навігація стрілками в модальному вікні
+            if (document.getElementById('modal-gallery').classList.contains('active')) {
+                if (e.key === 'ArrowLeft') {
+                    navigateModalGallery(-1);
+                } else if (e.key === 'ArrowRight') {
+                    navigateModalGallery(1);
+                }
+            }
+        });
+
+        // Завантажуємо дані товару при завантаженні сторінки
+        document.addEventListener('DOMContentLoaded', loadProductDetails);
+    </script>
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Замовлення успішне - iStore</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="cart.css">
+    <style>
+        .success-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 40px;
+            text-align: center;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .success-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        .order-number {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-size: 18px;
+        }
+
+        .order-details {
+            text-align: left;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .btn-primary {
+            background: #007aff;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s;
+        }
+
+        .btn-primary:hover {
+            background: #0056cc;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background: #545b62;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-top">
+            <div class="logo">i<span>Store</span></div>
+            <div class="user-actions">
+                <a href="index.html">На головну</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="success-container">
+        <div class="success-icon">🎉</div>
+        <h1>Замовлення успішно оформлено!</h1>
+        <p>Дякуємо за ваше замовлення. Ми зв'яжемося з вами найближчим часом для підтвердження.</p>
+        
+        <div class="order-number">
+            <strong>Номер замовлення: #<span id="orderId"></span></strong>
+        </div>
+        
+        <div class="order-details">
+            <h3>Деталі замовлення:</h3>
+            <div id="orderSummary"></div>
+        </div>
+        
+        <div>
+            <button class="btn-primary" onclick="window.location.href='index.html'">Продовжити покупки</button>
+            <button class="btn-secondary" onclick="printPage()">Друкувати</button>
+        </div>
+    </div>
+
+    <script>
+        // Генеруємо номер замовлення та показуємо деталі
+        function loadOrderDetails() {
+            const orderId = 'ORD' + Date.now().toString().slice(-6);
+            document.getElementById('orderId').textContent = orderId;
+            
+            const orderData = JSON.parse(localStorage.getItem('orderData') || '{}');
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const total = localStorage.getItem('cartTotal') || 0;
+            
+            let orderSummary = `
+                <p><strong>Отримувач:</strong> ${orderData.firstName} ${orderData.lastName}</p>
+                <p><strong>Телефон:</strong> ${orderData.phone}</p>
+                <p><strong>Email:</strong> ${orderData.email}</p>
+                <p><strong>Доставка:</strong> ${getDeliveryMethodName(orderData.deliveryMethod)}, ${getCityName(orderData.city)}</p>
+                <p><strong>Адреса:</strong> ${orderData.address}</p>
+                <p><strong>Оплата:</strong> ${getPaymentMethodName(orderData.payment)}</p>
+                <p><strong>Сума:</strong> ${parseInt(total).toLocaleString('uk-UA')} ₴</p>
+            `;
+            
+            document.getElementById('orderSummary').innerHTML = orderSummary;
+            
+            // Очищаємо кошик після успішного замовлення
+            localStorage.removeItem('cart');
+            localStorage.removeItem('cartTotal');
+            localStorage.removeItem('orderData');
+        }
+
+        function getPaymentMethodName(method) {
+            const methods = {
+                'card': 'Банківська карта',
+                'google-pay': 'Google Pay',
+                'apple-pay': 'Apple Pay',
+                'cash': 'Готівка при отриманні'
+            };
+            return methods[method] || method;
+        }
+
+        function getDeliveryMethodName(method) {
+            const methods = {
+                'nova-poshta': 'Нова Пошта',
+                'ukr-poshta': 'Укрпошта',
+                'courier': 'Кур\'єр',
+                'pickup': 'Самовивіз'
+            };
+            return methods[method] || method;
+        }
+
+        function getCityName(city) {
+            const cities = {
+                'kyiv': 'Київ',
+                'lviv': 'Львів',
+                'kharkiv': 'Харків',
+                'odesa': 'Одеса',
+                'dnipro': 'Дніпро'
+            };
+            return cities[city] || city;
+        }
+
+        function printPage() {
+            window.print();
+        }
+
+        document.addEventListener('DOMContentLoaded', loadOrderDetails);
+    </script>
+</body>
+</html>

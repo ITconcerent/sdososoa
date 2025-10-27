@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Замовлення успішне - iStore</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="cart.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f8fff8 0%, #e8f5e8 50%, #d0ebd0 100%);
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Розпливчастий зелений фон по всьому екрані */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(76, 175, 80, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(76, 175, 80, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(76, 175, 80, 0.08) 0%, transparent 50%);
+            z-index: -1;
+            animation: gentle-pulse 8s ease-in-out infinite;
+        }
+
+        .success-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 40px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 
+                0 10px 40px rgba(0,0,0,0.1),
+                0 0 0 1px rgba(76, 175, 80, 0.1);
+            backdrop-filter: blur(10px);
+            position: relative;
+            border: 1px solid rgba(76, 175, 80, 0.2);
+        }
+
+        /* Тонке зелене світіння навколо контейнера */
+        .success-container::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.3), rgba(76, 175, 80, 0.1));
+            border-radius: 22px;
+            z-index: -1;
+            opacity: 0.6;
+            animation: container-glow 3s ease-in-out infinite alternate;
+        }
+
+        .success-icon {
+            font-size: 100px;
+            margin-bottom: 30px;
+            animation: bounce 1s ease-in-out;
+            color: #4CAF50;
+            text-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .order-number {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 30px 0;
+            font-size: 24px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .order-number::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        .order-details {
+            text-align: left;
+            background: rgba(248, 249, 250, 0.8);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border-left: 4px solid #4CAF50;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            backdrop-filter: blur(5px);
+        }
+
+        .detail-section {
+            margin-bottom: 25px;
+        }
+
+        .detail-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .detail-section h4 {
+            color: #2E7D32;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(232, 236, 241, 0.8);
+        }
+
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 18px 30px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+            background: linear-gradient(135deg, #45a049, #4CAF50);
+        }
+
+        .btn-secondary {
+            background: rgba(108, 117, 125, 0.9);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            backdrop-filter: blur(5px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(84, 91, 98, 0.9);
+            transform: translateY(-2px);
+        }
+
+        .bonus-card {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.9), rgba(255, 165, 0, 0.9));
+            color: #333;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(5px);
+        }
+
+        .success-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(76, 175, 80, 0.9);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            backdrop-filter: blur(5px);
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-20px);
+            }
+            60% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes gentle-pulse {
+            0%, 100% {
+                opacity: 0.6;
+            }
+            50% {
+                opacity: 0.8;
+            }
+        }
+
+        @keyframes container-glow {
+            0% {
+                opacity: 0.4;
+            }
+            100% {
+                opacity: 0.7;
+            }
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%) translateY(-100%) rotate(45deg);
+            }
+            100% {
+                transform: translateX(100%) translateY(100%) rotate(45deg);
+            }
+        }
+
+        .confetti {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background: #4CAF50;
+            animation: confetti-fall 5s linear forwards;
+            border-radius: 50%;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Анімації для деталей замовлення */
+        .detail-section {
+            animation: slideInUp 0.6s ease-out;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        header {
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-top">
+            <div class="logo">i<span>Store</span></div>
+            <div class="user-actions">
+                <a href="index.html">
+                    <i class="fas fa-home"></i>
+                    На головну
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="success-container">
+        <div class="success-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        
+        <div class="success-badge">
+            <i class="fas fa-shield-alt"></i>
+            Замовлення підтверджено
+        </div>
+        
+        <h1 style="font-size: 36px; margin-bottom: 15px; color: #2E7D32;">Замовлення успішно оформлено!</h1>
+        <p style="font-size: 18px; color: #666; margin-bottom: 30px;">Дякуємо за ваше замовлення. Ми зв'яжемося з вами найближчим часом для підтвердження.</p>
+        
+        <div class="order-number">
+            <i class="fas fa-receipt"></i>
+            Номер вашого замовлення: <span id="orderId"></span>
+        </div>
+        
+        <div class="bonus-card">
+            <h3 style="margin-bottom: 10px;">
+                <i class="fas fa-gift"></i>
+                Ви отримали бонуси!
+            </h3>
+            <p style="font-size: 20px; font-weight: bold; margin: 0;">+150 бонусних балів</p>
+            <p style="margin: 5px 0 0 0; font-size: 14px;">
+                <i class="fas fa-star"></i>
+                Використовуйте їх при наступних покупках
+            </p>
+        </div>
+        
+        <div class="order-details">
+            <div class="detail-section">
+                <h4><i class="fas fa-shipping-fast"></i> Інформація про доставку</h4>
+                <div class="detail-item">
+                    <span><i class="fas fa-user"></i> Отримувач:</span>
+                    <strong id="delivery-name"></strong>
+                </div>
+                <div class="detail-item">
+                    <span><i class="fas fa-phone"></i> Телефон:</span>
+                    <strong id="delivery-phone"></strong>
+                </div>
+                <div class="detail-item">
+                    <span><i class="fas fa-truck"></i> Спосіб доставки:</span>
+                    <strong id="delivery-method"></strong>
+                </div>
+                <div class="detail-item">
+                    <span><i class="fas fa-map-marker-alt"></i> Адреса:</span>
+                    <strong id="delivery-address"></strong>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <h4><i class="fas fa-credit-card"></i> Інформація про оплату</h4>
+                <div class="detail-item">
+                    <span><i class="fas fa-wallet"></i> Спосіб оплати:</span>
+                    <strong id="payment-method"></strong>
+                </div>
+                <div class="detail-item">
+                    <span><i class="fas fa-money-bill-wave"></i> Сума до сплати:</span>
+                    <strong id="order-total"></strong>
+                </div>
+                <div class="detail-item">
+                    <span><i class="fas fa-check-circle"></i> Статус:</span>
+                    <strong style="color: #4CAF50;">Оплачено <i class="fas fa-check"></i></strong>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <h4><i class="fas fa-info-circle"></i> Додаткова інформація</h4>
+                <div class="detail-item">
+                    <span><i class="fas fa-calendar-alt"></i> Очікуваний термін доставки:</span>
+                    <strong>1-3 робочих дні</strong>
+                </div>
+                <div class="detail-item">
+                    <span><i class="fas fa-undo-alt"></i> Гарантія повернення:</span>
+                    <strong>14 днів</strong>
+                </div>
+            </div>
+        </div>
+        
+        <div style="margin-top: 30px;">
+            <a href="index.html" class="btn-primary">
+                <i class="fas fa-shopping-bag"></i>
+                Продовжити покупки
+            </a>
+            <button class="btn-secondary" onclick="printPage()">
+                <i class="fas fa-print"></i>
+                Друкувати
+            </button>
+        </div>
+
+        <div style="margin-top: 30px; padding: 20px; background: rgba(248, 249, 250, 0.8); border-radius: 10px;">
+            <h4 style="margin-bottom: 15px; color: #333; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                <i class="fas fa-headset"></i>
+                Допомога
+            </h4>
+            <p style="color: #666; margin-bottom: 10px;">Зв'яжіться з нами, якщо у вас виникли питання:</p>
+            <p style="color: #666;">
+                <i class="fas fa-phone"></i> <strong>+380 (44) 123-45-67</strong> | 
+                <i class="fas fa-envelope"></i> <strong>support@istore.ua</strong>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function loadOrderSuccess() {
+            const orderData = JSON.parse(localStorage.getItem('currentOrder') || '{}');
+            
+            if (!orderData.id) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // Відображаємо дані
+            document.getElementById('orderId').textContent = orderData.id;
+            document.getElementById('delivery-name').textContent = 
+                `${orderData.delivery.firstName} ${orderData.delivery.lastName}`;
+            document.getElementById('delivery-phone').textContent = orderData.delivery.phone;
+            document.getElementById('delivery-method').textContent = getDeliveryMethodName(orderData.delivery.deliveryMethod);
+            document.getElementById('delivery-address').textContent = 
+                `${getCityName(orderData.delivery.city)}, ${orderData.delivery.address}`;
+            document.getElementById('payment-method').textContent = getPaymentMethodName(orderData.payment.method);
+            document.getElementById('order-total').textContent = `${parseInt(orderData.total).toLocaleString('uk-UA')} ₴`;
+            
+            // Запускаємо конфеті
+            createConfetti();
+        }
+
+        function getCityName(city) {
+            const cities = {
+                'kyiv': 'Київ', 'lviv': 'Львів', 'kharkiv': 'Харків',
+                'odesa': 'Одеса', 'dnipro': 'Дніпро'
+            };
+            return cities[city] || city;
+        }
+
+        function getDeliveryMethodName(method) {
+            const methods = {
+                'nova-poshta': 'Нова Пошта', 'ukr-poshta': 'Укрпошта',
+                'courier': 'Кур\'єр', 'pickup': 'Самовивіз'
+            };
+            return methods[method] || method;
+        }
+
+        function getPaymentMethodName(method) {
+            const methods = {
+                'card': 'Банківська карта',
+                'google-pay': 'Google Pay',
+                'apple-pay': 'Apple Pay',
+                'cash': 'Готівка при отриманні'
+            };
+            return methods[method] || method;
+        }
+
+        function createConfetti() {
+            const colors = ['#4CAF50', '#2E7D32', '#81C784', '#A5D6A7', '#C8E6C9'];
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.width = Math.random() * 8 + 4 + 'px';
+                    confetti.style.height = Math.random() * 8 + 4 + 'px';
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, 5000);
+                }, i * 100);
+            }
+        }
+
+        function printPage() {
+            window.print();
+        }
+
+        document.addEventListener('DOMContentLoaded', loadOrderSuccess);
+    </script>
+</body>
+</html>

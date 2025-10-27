@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сторінку не знайдено - iStore</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="cart.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .error-container {
+            max-width: 600px;
+            margin: 100px auto;
+            padding: 40px;
+            text-align: center;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .error-icon {
+            font-size: 80px;
+            color: #007aff;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        .error-code {
+            font-size: 120px;
+            font-weight: bold;
+            color: #007aff;
+            margin-bottom: 10px;
+            line-height: 1;
+        }
+
+        .error-title {
+            font-size: 32px;
+            color: #000;
+            margin-bottom: 15px;
+        }
+
+        .error-message {
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .btn-primary {
+            background: #007aff;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .btn-primary:hover {
+            background: #0056cc;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background: #545b62;
+        }
+
+        .search-suggestions {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            text-align: left;
+        }
+
+        .suggestions-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .suggestion-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-bottom: 5px;
+        }
+
+        .suggestion-item:hover {
+            background: white;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .error-container {
+                margin: 50px 20px;
+                padding: 30px 20px;
+            }
+            
+            .error-code {
+                font-size: 80px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-top">
+            <div class="logo">i<span>Store</span></div>
+            <div class="user-actions">
+                <a href="index.html">
+                    <i class="fas fa-home"></i>
+                    На головну
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="error-container">
+        <div class="error-icon">🔍</div>
+        <div class="error-code">404</div>
+        <h1 class="error-title">Сторінку не знайдено</h1>
+        <p class="error-message">
+            На жаль, сторінка, яку ви шукаєте, не існує або була переміщена.
+        </p>
+        
+        <div class="search-suggestions">
+            <div class="suggestions-title">Можливо, ви шукали:</div>
+            <div class="suggestion-item" onclick="window.location.href='index.html'">
+                <i class="fas fa-mobile-alt"></i>
+                <span>Каталог iPhone</span>
+            </div>
+            <div class="suggestion-item" onclick="window.location.href='index.html'">
+                <i class="fas fa-tablet-alt"></i>
+                <span>Каталог iPad</span>
+            </div>
+            <div class="suggestion-item" onclick="window.location.href='index.html'">
+                <i class="fas fa-laptop"></i>
+                <span>Каталог MacBook</span>
+            </div>
+            <div class="suggestion-item" onclick="window.location.href='index.html'">
+                <i class="fas fa-clock"></i>
+                <span>Каталог Apple Watch</span>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <a href="index.html" class="btn-primary">
+                <i class="fas fa-home"></i>
+                На головну
+            </a>
+            <button class="btn-secondary" onclick="window.history.back()">
+                <i class="fas fa-arrow-left"></i>
+                Повернутись назад
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Автоматичне перенаправлення через 10 секунд
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 10000);
+
+        // Динамічні підказки на основі популярних товарів
+        document.addEventListener('DOMContentLoaded', function() {
+            const popularProducts = [
+                { name: 'iPhone 16 Pro', url: 'product.html?id=1&category=iphone' },
+                { name: 'iPad Pro M2', url: 'product.html?id=101&category=ipad' },
+                { name: 'MacBook Air M2', url: 'product.html?id=205&category=macbook' },
+                { name: 'Apple Watch Ultra', url: 'product.html?id=301&category=apple-watch' }
+            ];
+
+            const suggestionsContainer = document.querySelector('.search-suggestions');
+            
+            // Додаємо популярні товари
+            popularProducts.forEach(product => {
+                const suggestion = document.createElement('div');
+                suggestion.className = 'suggestion-item';
+                suggestion.innerHTML = `
+                    <i class="fas fa-search"></i>
+                    <span>${product.name}</span>
+                `;
+                suggestion.onclick = () => window.location.href = product.url;
+                suggestionsContainer.appendChild(suggestion);
+            });
+        });
+
+        // Аналітика для відстеження 404 помилок
+        console.log('404 Error - Page not found:', {
+            url: window.location.href,
+            referrer: document.referrer,
+            timestamp: new Date().toISOString()
+        });
+    </script>
+</body>
+</html>
